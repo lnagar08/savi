@@ -56,6 +56,12 @@ app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 
-app.listen(env.PORT, () => {
-  console.log(`Server is running on port ${env.PORT}`);
-});
+//app.listen(env.PORT, () => {
+//  console.log(`Server is running on port ${env.PORT}`);
+//});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(env.PORT || 5000, () => {
+    console.log(`Server is running on port ${env.PORT || 5000}`);
+  });
+}
+export default app;
