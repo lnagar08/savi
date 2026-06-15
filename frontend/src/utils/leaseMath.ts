@@ -216,7 +216,6 @@ function leaseYearFor(leaseStartDate: string, date: string): number {
 // Replace your existing calculateLease with this function
 export const calculateLease = (inputs: Inputs, curves: Curves): Result => {
   const {
-    pricingDate,
     leaseStartDate,
     leaseExpiryDate,
     initialAnnualRent,

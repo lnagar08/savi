@@ -84,20 +84,6 @@ interface MarketData {
 }
 type TraceabilityLookup = Record<string, string>
 
-const formatCurrency = (value: number | string | undefined, fallback: string) => {
-  if (value === undefined || value === null || value === '') {
-    return fallback
-  }
-  const amount = typeof value === 'number' ? value : Number(String(value).replace(/[^\d.-]/g, ''))
-  if (!Number.isFinite(amount)) {
-    return fallback
-  }
-  return new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: 'GBP',
-    maximumFractionDigits: 0,
-  }).format(amount)
-}
 
 const toLabel = (key: string) => key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 
@@ -428,7 +414,7 @@ function DealAnalysisDetailsPage() {
   });
 
   const isLoadingDeal = Boolean(dealId) && isDealLoading
-  const isLoadingBid = Boolean(dealId) && isBidLoading
+  //const isLoadingBid = Boolean(dealId) && isBidLoading
   const [editingFieldPath, setEditingFieldPath] = useState<string | null>(null)
   const [draftValue, setDraftValue] = useState('')
   const [editedValues, setEditedValues] = useState<Record<string, string>>({})
@@ -464,11 +450,7 @@ function DealAnalysisDetailsPage() {
     const editedValuesObject = editedValuesToObject(editedValues)
     console.log('Edited values as object:', editedValuesObject)
   }, [editedValues])
-  const parseCurrency = (value: any): number => {
-    if (typeof value === 'number') return value;
-    if (!value) return 0;
-    return parseFloat(value.toString().replace(/[^\d.-]/g, '')) || 0;
-  };
+  
 
   useEffect(() => {
     const loadData = async () => {
@@ -506,7 +488,7 @@ function DealAnalysisDetailsPage() {
   const purchaserCosts = Number((financialInformation?.costs as any)?.purchaser_costs_percent || 0);
   const loanAmount = parseFloat(deal?.lease_information?.loan_amount) || 0;
   const marketValue = parseFloat(deal?.lease_information?.market_value) || deal?.financial_information?.asking_price as number || 0;
-  const ltv = marketValue > 0 ? (loanAmount / marketValue) * 100 : 0;
+  //const ltv = marketValue > 0 ? (loanAmount / marketValue) * 100 : 0;
   //const comparatorBondSpread = 0.012;//1.20% 
   //console.log(pricingDate);
     useEffect(() => {
@@ -568,13 +550,13 @@ function DealAnalysisDetailsPage() {
     return calculateLease(inputs, curve || {});
   }, [inputs, curve]); 
   
-  const firstPayment = 0//results.cashflows && results.cashflows.length > 0 ? results.cashflows[0].payment : 0;
-  const isQuarterly = (deal?.lease_information?.payment_frequency || inputs?.paymentFrequency) === 'Quarterly';
-  const noi = firstPayment * (isQuarterly ? 4 : 12);
-  const incomeCover = noi / (parseFloat(deal?.lease_information?.debt_service) || 1); 
+  //const firstPayment = 0//results.cashflows && results.cashflows.length > 0 ? results.cashflows[0].payment : 0;
+ // const isQuarterly = (deal?.lease_information?.payment_frequency || inputs?.paymentFrequency) === 'Quarterly';
+  //const noi = firstPayment * (isQuarterly ? 4 : 12);
+  //const incomeCover = noi / (parseFloat(deal?.lease_information?.debt_service) || 1); 
 
   const grossRent = Number(starting_rent || 0);
-  const operatingExpenses = Number(deal?.lease_information?.annualOperatingExpenses || 0);
+  //const operatingExpenses = Number(deal?.lease_information?.annualOperatingExpenses || 0);
   const stabilisedNOI = deal?.noi ?? 0;
   const IRR = ((results.irr ?? 0) * 100).toFixed(1) + '%';
   const percentageSpread = niy - giltCurve;

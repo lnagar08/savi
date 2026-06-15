@@ -14,7 +14,7 @@ import {
   Indent,
   IndentBlock
 } from 'ckeditor5';
-import { Image, ImageToolbar, ImageCaption, ImageStyle, ImageUpload, ImageInsert, ImageBlock, ImageInline } from '@ckeditor/ckeditor5-image';
+import { Image, ImageToolbar, ImageCaption, ImageStyle, ImageUpload } from '@ckeditor/ckeditor5-image';
 import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { TableProperties, TableCellProperties } from '@ckeditor/ckeditor5-table';
 import { Underline } from '@ckeditor/ckeditor5-basic-styles';

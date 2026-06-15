@@ -230,10 +230,10 @@ function NdaAnalysisModal({dealId}: {dealId: string}) {
           </div>
           <div className="modal-body">
             {/* 1. Global Processing Status Banners */}
-            {globalError && (
+            {globalError || houseWarning || counterpartyWarning && (
               <div className="alert alert-danger d-flex align-items-center mb-4" role="alert">
                 <i className="la la-exclamation-circle me-2 fs-5"></i>
-                <div>{globalError}</div>
+                <div>{globalError || houseWarning || counterpartyWarning}</div>
               </div>
             )}
 

@@ -26,7 +26,7 @@ function CreateBidLetterModal({ dealId, dealName, dealLocation, yieldValue, uplo
   const [isDragActive, setIsDragActive] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
-  const [isUploading, setIsUploading] = useState(false)
+  //const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [bidLetterName, setBidLetterName] = useState("");
   const [error, setError] = useState("");
@@ -163,7 +163,7 @@ const handleClose = () => {
     setErrorMessage('')
     setUploadedFile(file)
 
-    setIsUploading(true)
+    //setIsUploading(true)
     const formData = new FormData()
     formData.append('file', file)
     formData.append('dealId', dealId)
@@ -188,7 +188,7 @@ const handleClose = () => {
       setBidLetterContent('');
       setUploadedFile(null);
     } finally {
-      setIsUploading(false);
+     // setIsUploading(false);
     }
   }
   const handleCreateBidLetter = async () => {

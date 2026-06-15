@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -25,30 +25,6 @@ interface AmortisationChartProps {
 
 export const AmortisationChart: React.FC<AmortisationChartProps> = ({ data }) => {
   
-  const { filteredTicks } = useMemo(() => {
-    if (!data || data.length === 0) return { filteredTicks: [] };
-
-    const ticks: string[] = [];
-    const seenYears = new Set<string>();
-
-    data.forEach((item, index) => {
-      const year = item.date.split('-')[2];
-
-      if (index === 0 || !seenYears.has(year)) {
-        seenYears.add(year);
-        ticks.push(item.date);
-      }
-    });
-
-    const lastDate = data[data.length - 1].date;
-    if (!ticks.includes(lastDate)) {
-      ticks.push(lastDate);
-    }
-
-    return { filteredTicks: ticks };
-  }, [data]);
-
- 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-IN', { signDisplay: 'auto' }).format(value);
   };

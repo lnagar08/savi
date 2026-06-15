@@ -7,7 +7,7 @@ interface InputDealModalProps {
   setCurves: React.Dispatch<React.SetStateAction<any>>;
   dealId: string;
 }
-function InputDealModal({ inputs, curve, setInputs, setCurves, dealId }: InputDealModalProps) {
+function InputDealModal({ inputs, curve, dealId }: InputDealModalProps) {
     
     const [formData, setFormData] = useState({
         startDate: inputs.leaseStartDate,
@@ -66,7 +66,7 @@ function InputDealModal({ inputs, curve, setInputs, setCurves, dealId }: InputDe
                 throw new Error('Failed to save inputs');
             }
            
-            const result = response.data.data;
+           // const result = response.data.data;
            
             window.location.reload();
 
