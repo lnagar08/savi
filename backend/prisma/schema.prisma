@@ -1,0 +1,400 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  company String?
+  address String?
+  phone String?
+  password String?
+  provider String?
+
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  userRoles UserRole[]
+  deals     Deal[]
+  documents Document[]
+
+  @@map("users")
+}
+
+model Role {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
+
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  userRoles UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id     Int @id @default(autoincrement())
+  userId Int
+  roleId Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+model Deal {
+  id                     Int     @id @default(autoincrement())
+  name                   String
+  description            String?
+  dealLead               String? @map("deal_lead")
+  ref                    String?
+  location               String?
+  value                  Float?
+  assetClass             String? @map("asset_class")
+  sector                 String?
+  progress               Int     @default(0)
+  inflationLagMonths     Int     @default(3)
+  soniaCurve             Float?  @default(0.0377)
+  inflationCurve         Float?  @default(0.031)
+  giltCurve              Float?  @default(0.042)
+  stage                  String?
+  tenant                 String?
+  leaseTerm              String? @map("lease_term")
+  remainingLease         String? @map("remaining_lease")
+  extractedText          String? @map("extracted_text")
+  extracted_deal_summary String? @map("extracted_deal_summary")
+  userId                 Int     @map("user_id")
+  user                   User    @relation(fields: [userId], references: [id])
+  noi                    Int?     @default(0)
+  vpv                    Int?    @default(0)
+  ltv                    Int?     @default(0)
+
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+  documents             Document[]
+  deal_identification   DealIdentification?
+  visual_assets         VisualAssets?
+  property_details      PropertyDetails?
+  tenant_information    TenantInformation?
+  lease_information     LeaseInformation?
+  financial_information FinancialInformation?
+  market_context        MarketContext?
+  deal_pipeline         DealPipeline?
+  source_traceabilities SourceTraceability[]
+  additional_infos      AdditionalInfo[]
+  bidLetters            BidLetter[]
+  bidLetterUpdateds     BidLetterUpdated[]
+  ndaAnalyses           NdaAnalysis[]
+  dealReports           DealReport[]
+
+  @@map("deals")
+}
+
+model DealIdentification {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  deal_name        String?
+  location         String?
+  asset_type       String?
+  transaction_type String?
+  tenure           String?
+  ref              String?
+  value            Float?
+  sector           String?
+  stage            String?
+  deal_lead        String?
+  starting_rent    Int?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("deal_identifications")
+}
+
+model VisualAssets {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  asset_images Json? // array of image URLs or base64 strings
+  aerial_views Json? // array of image URLs or base64 strings
+  site_plans   Json? // array of image URLs or base64 strings
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("visual_assets")
+}
+
+model PropertyDetails {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  property_description String?
+  number_of_rooms      Int?
+  floors               Int?
+  site_area            Float?
+  site_area_unit       String?
+  parking_spaces       Int?
+  number_of_assets     Int?
+  assets               Json? // name, area, area_unit, description
+  site_description     String?
+  additional_features  String[]
+
+  contacts Json? // name, email, phone
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("property_details")
+}
+
+model TenantInformation {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  tenant_name           String?
+  tenant_parent_company String?
+  tenants               Json? // asset, tenant
+  operator              String?
+  backing_investor      String?
+  other_brands          String[]
+  credit_rating         String?
+  business_description  String?
+  financials            Json? // revenue, net_income, etc.
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("tenant_informations")
+}
+
+model LeaseInformation {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+  payment_frequency                   String?
+  lease_type                          String?
+  lease_start_date                    DateTime?
+  lease_expiry_date                   DateTime?
+  lease_term_years                    Float?
+  break_option                        String?
+  break_option_years                  Float?
+  break_option_date                   DateTime?
+  remaining_lease                     String?
+  collar                              String?
+  cap                                 String?
+  pricing_date                        DateTime?
+  review_pattern                      String?
+  spread                              String?
+  creadit_rating                      String?
+  indexation_formula                  String?
+  stabllised_NOI                      String?
+  voluntary_provided_funding          String?
+  internal_rate_of_return             String?
+  duration_years                      String?
+  weighted_average_lease_expiry_years String?
+  assumed_costs                       String?
+  comparator_bond_spread              String?
+  illiquidity_premium_percent         String?
+  gross_price_percentage              String?
+  loan_to_value_percent               String?
+  income_cover_ratio_percent          String?
+  annualOperatingExpenses             String?
+  loan_amount                         String?
+  market_value                        String?
+  debt_service                        String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("lease_informations")
+}
+
+model FinancialInformation {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  purchase_price            Float?
+  asking_price              Float?
+  net_initial_yield_percent Float?
+  initial_payment           Float?
+  vat_applicable            Boolean?
+  site_purchase_price       Float?
+  transaction_structure     String?
+  costs                     Json? // land_cost_percent, balance_cost_percent, purchaser_costs_percent.
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("financial_informations")
+}
+
+model MarketContext {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  location_overview              String?
+  tourism                        String?
+  connectivity                   String?
+  rental_levels                  String?
+  rental_growth_forecast_percent Float?
+  economic_drivers               String[]
+  economic_indicators            String[]
+  market_characteristics         String[]
+  retail_presence                String[]
+  hotel_market                   String?
+  demographics                   Json?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("market_contexts")
+}
+
+model DealPipeline {
+  id      Int  @id @default(autoincrement())
+  deal_id Int  @unique @map("deal_id")
+  deal    Deal @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  planning_status           String?
+  build_period_weeks        Int?
+  handover_period_days      Int?
+  expected_handover         String?
+  expected_operational_date String?
+  construction_year         String?
+  redevelopment_years       Int[]
+  ownership_entity          String?
+  developer                 String?
+  contractor                String?
+  architect                 String?
+  legal_advisor             String?
+  capex_required            String?
+  esg_rating                String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("deal_pipelines")
+}
+
+model SourceTraceability {
+  id      Int      @id @default(autoincrement())
+  page    Int
+  section String?
+  fields  String[]
+  deal_id Int      @map("deal_id")
+  deal    Deal     @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("source_traceability")
+}
+
+model AdditionalInfo {
+  id      Int    @id @default(autoincrement())
+  key     String
+  value   Json
+  deal_id Int    @map("deal_id")
+  deal    Deal   @relation(fields: [deal_id], references: [id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("additional_infos")
+}
+
+model Document {
+  id          Int    @id @default(autoincrement())
+  name        String
+  url         String
+  contentType String @map("content_type")
+  userId      Int    @map("user_id")
+  size        Int
+  user        User   @relation(fields: [userId], references: [id])
+  dealId      Int    @map("deal_id")
+  deal        Deal   @relation(fields: [dealId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("documents")
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int      @map("user_id")
+  expiresAt DateTime @map("expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("password_reset_tokens")
+}
+
+model BidLetter {
+  id            Int      @id @default(autoincrement())
+  dealId        Int
+  deal          Deal     @relation(fields: [dealId], references: [id])
+  projectName   String?
+  purchasePrice Float?
+  createdAt     DateTime @default(now())
+  rawContent    String?  @db.Text
+}
+
+model BidLetterUpdated {
+  id            Int      @id @default(autoincrement())
+  dealId        Int
+  deal          Deal     @relation(fields: [dealId], references: [id])
+  projectName   String?
+  purchasePrice Float?
+  createdAt     DateTime @default(now())
+  rawContent    String?  @db.Text
+}
+
+model DealReport {
+  id            Int      @id @default(autoincrement())
+  dealId        Int
+  deal          Deal     @relation(fields: [dealId], references: [id])
+  fileName      String?
+  fileUrl       String?
+  reportContent String?  @db.Text
+  createdAt     DateTime @default(now())
+}
+
+model NdaAnalysis {
+  id            Int      @id @default(autoincrement())
+  dealId        Int
+  deal          Deal     @relation(fields: [dealId], references: [id])
+  parentId      Int?     @map("parent_id") // For versioning, null for original, points to original for revisions
+  fileName      String?
+  fileUrl       String?
+  analysisResult Json?
+  type          String   @default("draft") //draft or template
+  version       Int      @default(1)
+  createdAt     DateTime @default(now())
+}

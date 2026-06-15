@@ -1,0 +1,576 @@
+@media all and (min-width: 320px) and (max-width: 991px) {
+    button.navbar-toggler {
+        padding: 0px !important;
+        position: relative;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    button.navbar-toggler span.navbar-toggler-icon {
+        background: none !important;
+        position: relative;
+        border-top: 2px solid #1A365D;
+        height: 22px !important;
+    }
+
+    button.navbar-toggler span.navbar-toggler-icon::before {
+        content: "";
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        width: 100%;
+        height: 2px;
+        background: #1A365D;
+    }
+
+    button.navbar-toggler span.navbar-toggler-icon::after {
+        content: "";
+        position: absolute;
+        left: 0px;
+        top: 8px;
+        width: 100%;
+        height: 2px;
+        background: #1A365D;
+    }
+
+    .modediv-mobile {
+        display: block;
+        padding-top: 0px;
+    }
+
+    .header-sec nav.navbar {
+        padding: 15px 0px;
+    }
+
+    .header-sec .navbar-brand {
+        padding: 0px 0px;
+    }
+
+    .navrightdiv {
+        display: inline-flex;
+        gap: 0px 20px;
+    }
+
+    .main-nav {
+        margin-left: 0px;
+    }
+
+    .navbar-nav .modediv {
+        display: none;
+    }
+
+    .header-sec ul.navbar-nav.main-nav li.nav-item a.nav-link {
+        font-size: 16px;
+        padding: 10px 12px;
+        margin: 0px 0px;
+    }
+
+    .navsearch .searchtop {
+        margin-right: 8px;
+        margin-left: 13px;
+        margin-bottom: 18px;
+        display: none;
+    }
+
+    .dropdown.notifications {
+        margin: 0px 0px 11px 8px;
+    }
+
+    .notifications .dropdown-toggle span {
+        right: auto;
+        top: -5px;
+        left: 15px;
+    }
+
+    .notifications .dropdown-menu {
+        position: relative;
+    }
+
+    .dropdown.dropdownprofile {
+        margin: 0px 0px 0px 8px;
+    }
+
+    .header-sec .dropdownprofile .dropdown-menu {
+        position: relative;
+    }
+}
+
+/*320-991*/
+
+
+@media all and (min-width: 320px) and (max-width: 767px) {
+    .accordion-design .deal-summary ul li label {
+        width: 100%;
+        padding-right: 0px;
+    }
+
+    .accordion-design .deal-summary ul li .editspan {
+        width: 100%;
+        text-align: left;
+    }
+
+    .deal-summary ul li span {
+        word-break: break-all;
+    }
+
+    .accordion-design ul .fielddata .editspan .editspan {
+        width: 100%;
+    }
+
+    .signin-left-design {
+        text-align: center;
+    }
+
+    .signinimg {
+        padding-right: 0px;
+    }
+
+    .signin-left-design img.img-fluid {
+        width: 200px;
+    }
+
+    .signin-left-design h2 {
+        font-size: 21px;
+        margin: 23px 0px 17px 0px;
+        line-height: 29px;
+    }
+
+    .signin-left-design p {
+        font-size: 14px;
+    }
+
+    .form-card {
+        border-radius: 20px;
+        padding: 30px 20px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    .mainheading h2 {
+        font-size: 24px;
+    }
+
+    .mainheading p {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .btngroup li {
+        width: 100%;
+        padding: 3px 8px;
+    }
+
+    .dontaccount {
+        font-size: 14px;
+    }
+
+    .accessdata {
+        font-size: 14px;
+    }
+
+    .forgot a {
+        font-size: 14px;
+        top: 28px;
+    }
+
+    .form-group.form-check.forgot {
+        margin-bottom: 30px;
+    }
+
+    .footer {
+        text-align: center;
+    }
+
+    .copyright-right ul {
+        text-align: center;
+    }
+
+    .copyright-right ul li {
+        font-size: 14px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .page-title h1 {
+        font-size: 24px;
+    }
+
+    .titleright-btn {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    .titleright-btn .btn {
+        margin: 0px 8px 8px 0px;
+    }
+
+    .dashboard-card {
+        margin-bottom: 20px;
+    }
+
+    .filters-right {
+        justify-content: center;
+        margin-top: 14px;
+    }
+
+    .filters-right .form-group .form-control {
+        min-width: auto;
+    }
+
+    .aimodal {
+        right: 10px;
+        max-width: 300px;
+        bottom: 90px;
+    }
+
+    .btn.btn-ai {
+        width: 60px;
+        height: 60px;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .modaltop-heading a {
+        font-size: 12px;
+        padding: 6px 16px;
+        line-height: 15px;
+    }
+
+    .modaltop-heading {
+        font-size: 16px;
+        line-height: 19px;
+    }
+
+    .question-option h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+        line-height: 23px;
+    }
+
+    .aimodal .modal-header h2 {
+        font-size: 18px;
+    }
+
+    .table-nodata {
+        padding: 40px 10px;
+    }
+
+    .tabledesign .table tbody tr td {
+        font-size: 13px;
+    }
+
+    .td-dealtitle {
+        font-size: 14px;
+    }
+
+    .extraction-review-right .btn.btn-info {
+        margin: 0px 0px 0px 0px;
+    }
+
+    .extraction-review-right .btn-group {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .extraction-review-right {
+        text-align: left;
+    }
+
+    .extraction-review-left h2 {
+        font-size: 20px;
+    }
+
+    .sticky-header.sticky-top {
+        position: static;
+    }
+
+    .analysis-card {
+        margin-bottom: 20px;
+    }
+
+    .visualcol {
+        margin-bottom: 20px;
+    }
+
+    .deal-summary ul li label {
+        font-size: 14px;
+    }
+
+    .deal-summary ul li span {
+        font-size: 14px;
+    }
+
+    .deal-summary ul li {
+        display: flex;
+        justify-content: normal;
+        flex-wrap: wrap;
+    }
+
+    .deal-summary ul li label {
+        display: block;
+        width: 100%;
+    }
+
+    .documents-new .btn.btn-info {
+        font-size: 11px;
+        padding: 8px 9px;
+        border-radius: 8px;
+    }
+
+    .summary-resultrow h2 {
+        font-size: 18px;
+        margin-bottom: 14px;
+    }
+
+    .summary-card {
+        padding: 10px;
+        width: 100%;
+    }
+
+    .createby ul li {
+        width: 100%;
+    }
+
+    .form-group.openbtn {
+        margin-top: 11px;
+    }
+
+    .drag-file-area h3 {
+        font-size: 14px;
+    }
+
+    .formdesign .form-group label {
+        font-size: 14px;
+    }
+
+    .drag-file-area {
+        padding: 20px 20px;
+    }
+
+    .dealreport-sec .deal-summary ul li span {
+        font-size: 14px;
+    }
+}
+
+/*320-767*/
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+    .responsive-map {
+        height: 222px;
+    }
+}
+
+/*768-991*/
+
+@media all and (min-width: 992px) and (max-width: 1024px) {
+    .header-sec ul.navbar-nav.main-nav li.nav-item a.nav-link {
+        padding: 20px 10px;
+        margin: 0px 7px;
+    }
+
+    .responsive-map {
+        height: 312px;
+    }
+}
+
+/*992-1024*/
+
+@media all and (min-width: 768px) and (max-width: 1024px) {
+    .signinimg {
+        padding-right: 0px;
+    }
+
+    .signin-left-design img.img-fluid {
+        width: 200px;
+    }
+
+    .signin-left-design h2 {
+        font-size: 21px;
+        margin: 23px 0px 17px 0px;
+        line-height: 29px;
+    }
+
+    .signin-left-design p {
+        font-size: 14px;
+    }
+
+    .form-card {
+        border-radius: 20px;
+        padding: 30px 20px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    .mainheading h2 {
+        font-size: 24px;
+    }
+
+    .mainheading p {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .btngroup li {
+        width: 100%;
+        padding: 3px 8px;
+    }
+
+    .dontaccount {
+        font-size: 14px;
+    }
+
+    .accessdata {
+        font-size: 14px;
+    }
+
+    .forgot a {
+        font-size: 14px;
+        top: 28px;
+    }
+
+    .form-group.form-check.forgot {
+        margin-bottom: 30px;
+    }
+
+    .maintitle-sec .col-md-6 {
+        width: 100%;
+    }
+
+    .titleright-btn {
+        text-align: left;
+        margin-top: 16px;
+    }
+
+    .titleright-btn .btn {
+        margin: 0px 5px 5px 0px;
+    }
+
+    .dashboardcard-row .col-md-3 {
+        width: 50%;
+    }
+
+    .extraction-review-right .btn.btn-info {
+        margin: 0px 0px 0px 0px;
+    }
+
+    .extraction-review-right .btn-group {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .extraction-review-right {
+        text-align: left;
+    }
+
+    .extraction-review-left h2 {
+        font-size: 20px;
+    }
+
+    .sticky-header.sticky-top {
+        position: static;
+    }
+
+    .analysis-card-row .col-md-3 {
+        width: 50%;
+    }
+
+    .analysis-card {
+        margin-bottom: 20px;
+    }
+
+    .visualcol-row .col-md-3 {
+        width: 50%;
+    }
+
+    .visualcol {
+        margin-bottom: 20px;
+    }
+
+    .deal-summary ul li label {
+        font-size: 14px;
+    }
+
+    .deal-summary ul li span {
+        font-size: 14px;
+    }
+
+    .deal-summary ul li {
+        display: flex;
+        justify-content: normal;
+        flex-wrap: wrap;
+    }
+
+    .deal-summary ul li label {
+        display: block;
+        width: 100%;
+    }
+
+    .summary-resultrow .col-md-9 {
+        width: 100%;
+    }
+
+    .summary-resultrow .col-md-3 {
+        width: 100%;
+    }
+
+    .dealreport-sec .deal-summary ul li span {
+        font-size: 14px;
+    }
+}
+
+/*768-1024*/
+
+@media all and (min-width: 1025px) and (max-width: 1199px) {
+    .header-sec ul.navbar-nav.main-nav li.nav-item a.nav-link {
+        padding: 20px 10px;
+        margin: 0px 7px;
+    }
+
+    .form-card {
+        padding: 30px 20px;
+    }
+
+    .btngroup li {
+        padding: 4px 4px;
+    }
+
+    .btngroup {
+        margin: 0px -4px;
+    }
+
+    .btngroup .btn {
+        font-size: 12px;
+        padding: 10px 2px;
+    }
+
+    .maintitle-sec .col-md-6 {
+        width: 100%;
+    }
+
+    .titleright-btn {
+        text-align: left;
+        margin-top: 16px;
+    }
+
+    .titleright-btn .btn {
+        margin: 0px 5px 5px 0px;
+    }
+
+    .analysis-card-row .col-md-3 {
+        width: 50%;
+    }
+
+    .version-strip .btn.btn-info {
+        font-size: 15px;
+        padding: 8px 13px;
+        width: 100%;
+    }
+}
+
+/*1025-1199*/
+
+@media all and (min-width: 1200px) and (max-width: 1280px) {}
+
+/*1200-1280*/

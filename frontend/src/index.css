@@ -1,0 +1,597 @@
+.signinbtn .nav-link {
+  border-radius: 10px !important;
+}
+
+body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.quill-editor-container .ql-container {
+  min-height: 200px;
+}
+.ql-table-wrapper {
+  overflow-x: auto;
+}
+body.dark-theme {
+  background: #0f1720;
+  color: #e4ecf7;
+}
+
+body.dark-theme .header-sec nav.navbar {
+  background: #111a25 !important;
+  border-bottom: 1px solid #243346;
+}
+
+body.dark-theme .header-sec ul.navbar-nav.main-nav li.nav-item a.nav-link,
+body.dark-theme .searchtop .input-group .form-control,
+body.dark-theme .dropdown-menu .dropdown-item,
+body.dark-theme .copyright-right ul li a,
+body.dark-theme .copyright-left p,
+body.dark-theme .page-title h1,
+body.dark-theme .deal-summary ul li span,
+body.dark-theme .dealreport-sec .card-header,
+body.dark-theme .investmentnots p,
+body.dark-theme .tabledesign .table thead tr th,
+body.dark-theme .tabledesign .table tbody tr td,
+body.dark-theme .tabledesign .dataTables_info,
+body.dark-theme .table-nodata h3,
+body.dark-theme .analysis-card h5,
+body.dark-theme .analysis-card h2,
+body.dark-theme .analysis-card span,
+body.dark-theme .extraction-review-info span,
+body.dark-theme .traceability-table-heading,
+body.dark-theme .documentheader ul li span {
+  color: #e4ecf7 !important;
+}
+
+body.dark-theme .header-sec .dropdownprofile .dropdown-menu,
+body.dark-theme .notifications .dropdown-menu,
+body.dark-theme .searchtop .input-group,
+body.dark-theme .filters-right .form-group,
+body.dark-theme .filters-right .form-group .form-control,
+body.dark-theme .whitebg,
+body.dark-theme .analysis-card,
+body.dark-theme .document-viewer,
+body.dark-theme .traceability-table,
+body.dark-theme .createdeal-modal .modal-content,
+body.dark-theme .aimodal .modal-content,
+body.dark-theme .documentheader,
+body.dark-theme .traceability-table-heading {
+  background: #152232 !important;
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .header-sec .dropdownprofile .dropdown-menu li a,
+body.dark-theme .nav-item.dropdown.notifications .dropdown-menu a.dropdown-item {
+  color: #d7e0eb !important;
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .searchtop .input-group .la-search,
+body.dark-theme .navsearch .searchtop .input-group .la,
+body.dark-theme .header-sec .dropdownprofile .dropdown-menu li a .la {
+  color: #b7c6d8 !important;
+}
+
+body.dark-theme .deal-summary ul li,
+body.dark-theme .dealreport-sec .deal-summary ul li,
+body.dark-theme .accordion-design .card .card-header a.btn,
+body.dark-theme .tabledesign .table thead tr th,
+body.dark-theme .tabledesign .table tbody tr td,
+body.dark-theme .documentheader,
+body.dark-theme .traceability-table-heading,
+body.dark-theme .traceability-table .tabledesign .table thead tr th,
+body.dark-theme .traceability-table .tabledesign .table tbody tr td,
+body.dark-theme .signbg .header-sec nav.navbar {
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .deal-summary ul li label,
+body.dark-theme .formdesign .form-group label,
+body.dark-theme .extraction-review-info span {
+  color: #aebed1 !important;
+}
+
+body.dark-theme .tabledesign .table tbody tr:hover td {
+  background: #1b2b3d !important;
+}
+
+body.dark-theme .mainsec,
+body.dark-theme .mainsec.dealreport-mainsec,
+body.dark-theme .sticky-header.sticky-top,
+body.dark-theme .maintitle-sec {
+  background: #0f1720 !important;
+}
+
+body.dark-theme .footer {
+  background: #0b121b;
+  border-top-color: #243346;
+}
+
+body.dark-theme .formdesign .form-group .form-control,
+body.dark-theme .input-group.btnai .form-control,
+body.dark-theme .version-strip .form-group .form-control,
+body.dark-theme .documentheader ul li span {
+  background: #0f1b2a;
+  color: #e4ecf7;
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .formdesign .form-group .form-control::placeholder,
+body.dark-theme .searchtop .input-group .form-control::placeholder {
+  color: #91a4bb;
+}
+
+body.dark-theme .form-check-input {
+  background-color: #0f1b2a;
+  border-color: #68809a;
+}
+
+body.dark-theme.signbg {
+  background: #0f1720;
+}
+
+body.dark-theme .signin-left-design h2,
+body.dark-theme .signin-left-design p,
+body.dark-theme .accessdata {
+  color: #dce6f5;
+}
+
+body.dark-theme .form-card {
+  background: linear-gradient(135deg, #1d3655 0%, #162638 100%);
+  border-color: rgba(160, 196, 232, 0.25);
+}
+
+body.dark-theme .btngroup .btn {
+  background: #0f1b2a;
+  color: #dce6f5;
+  border: 1px solid #2f435a;
+}
+
+body.dark-theme .dashboardheading {
+  color: #dce6f5;
+}
+
+body.dark-theme .dashboard-card {
+  background: #152232;
+  border-color: #2a3a4e;
+}
+
+body.dark-theme .dashboard-card h5,
+body.dark-theme .dashboard-card h2 .count {
+  color: #dce6f5;
+}
+
+body.dark-theme .filters-right .form-group,
+body.dark-theme .filters-right .form-group .form-control,
+body.dark-theme .searchtop .input-group {
+  background-color: #152232 !important;
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .filters-right .form-group .form-control,
+body.dark-theme .searchtop .input-group .form-control,
+body.dark-theme .filters-right .form-group .form-control::placeholder,
+body.dark-theme .searchtop .input-group .form-control::placeholder {
+  color: #c5d3e4 !important;
+}
+
+body.dark-theme .searchtop .input-group .form-control,
+body.dark-theme .navsearch .searchtop .input-group .form-control {
+  background-color: transparent !important;
+}
+
+body.dark-theme .filters-right .form-select,
+body.dark-theme .filters-right .form-group .form-control.form-select {
+  --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23dce6f5' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  --bs-form-select-bg-icon: none;
+  color: #dce6f5 !important;
+  background-color: #152232 !important;
+  border-color: #2a3a4e !important;
+  background-image: var(--bs-form-select-bg-img) !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+  padding-right: 2.25rem !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+body.dark-theme .notifications .dropdown-toggle img.img-fluid {
+  filter: brightness(0) invert(1);
+}
+
+body.dark-theme .filters-right .form-group .form-control option {
+  background: #152232;
+  color: #dce6f5;
+}
+
+body.dark-theme .aimodal .modal-header h2,
+body.dark-theme .modaltop-heading {
+  color: #e4ecf7;
+}
+
+body.dark-theme .aimodal .modal-header,
+body.dark-theme .modaltop-heading,
+body.dark-theme .question-option {
+  border-color: #3a4f67;
+}
+
+body.dark-theme .question-option {
+  background: rgba(12, 25, 42, 0.25);
+}
+
+body.dark-theme .question-option ul li span {
+  color: #dce6f5;
+  border-color: #9aaec6;
+  background: #1a2b3f;
+}
+
+body.dark-theme .input-group.btnai .form-control::placeholder {
+  color: #8ea3bc;
+}
+
+body.dark-theme .createdeal-modal .modal-content {
+  background: #152232 !important;
+  border-color: #2a3a4e;
+}
+
+body.dark-theme .createdeal-modal .modal-header,
+body.dark-theme .createdeal-modal .modal-footer {
+  border-color: #3a4f67;
+}
+
+body.dark-theme .createdeal-modal .modal-title,
+body.dark-theme .createdeal-modal .formdesign .form-group label,
+body.dark-theme .createdeal-modal .shot-heading,
+body.dark-theme .createdeal-modal .note,
+body.dark-theme .createdeal-modal .drag-file-area h3 {
+  color: #dce6f5 !important;
+}
+
+body.dark-theme .createdeal-modal .modal-header .btn-close {
+  filter: invert(1) brightness(1.4);
+}
+
+body.dark-theme .createdeal-modal .formdesign .form-group .form-control,
+body.dark-theme .createdeal-modal .formdesign .form-group .form-control::placeholder {
+  background: #0f1b2a;
+  border-color: #2a3a4e !important;
+  color: #dce6f5;
+}
+
+body.dark-theme .createdeal-modal .upload-files-container {
+  background: #0f1b2a;
+}
+
+body.dark-theme .createdeal-modal .drag-file-area {
+  background: #132337;
+  border-color: #4a6179;
+}
+
+body.dark-theme .createdeal-modal .drag-file-area label .browse-files-text {
+  color: #ff7a24;
+}
+
+body.dark-theme .createdeal-modal .upload-icon img.img-fluid {
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+body.dark-theme .drag-file-area .upload-icon img.img-fluid {
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+body.dark-theme .dealreport-sec .upload-files-container {
+  background: #0f1b2a;
+}
+
+body.dark-theme .dealreport-sec .drag-file-area {
+  background: #152232;
+  border-color: #4a6179;
+}
+
+body.dark-theme .dealreport-sec .drag-file-area h3,
+body.dark-theme .dealreport-sec .note,
+body.dark-theme .dealreport-sec .shot-heading,
+body.dark-theme .dealreport-sec .openbtn label,
+body.dark-theme .dealreport-sec .createby ul li {
+  color: #c8d6e8 !important;
+}
+
+body.dark-theme .dealreport-sec .createby ul li strong {
+  color: #e4ecf7 !important;
+}
+
+body.dark-theme .dealreport-sec .upload-icon img.img-fluid {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+body.dark-theme .dealreport-sec .tabledesign .table thead tr th,
+body.dark-theme .dealreport-sec .tabledesign .table tbody tr td {
+  background: #152232 !important;
+  color: #dce6f5 !important;
+  border-color: #3a4f67 !important;
+}
+
+body.dark-theme .dealreport-sec .createby {
+  border-color: #3a4f67;
+}
+
+body.dark-theme .ql-toolbar.ql-snow,
+body.dark-theme .ql-container.ql-snow {
+  border-color: #3a4f67 !important;
+  background: #132137;
+}
+
+body.dark-theme .ql-editor {
+  color: #dce6f5;
+}
+
+body.dark-theme .ql-editor.ql-blank::before {
+  color: #8ea3bc;
+}
+
+body.dark-theme .ql-snow .ql-picker,
+body.dark-theme .ql-snow .ql-picker-label,
+body.dark-theme .ql-snow .ql-picker-item {
+  color: #c8d6e8;
+}
+
+body.dark-theme .ql-snow .ql-stroke {
+  stroke: #c8d6e8;
+}
+
+body.dark-theme .ql-snow .ql-fill,
+body.dark-theme .ql-snow .ql-stroke.ql-fill {
+  fill: #c8d6e8;
+}
+
+body.dark-theme .createdeal-modal .tabledesign .table thead tr th,
+body.dark-theme .createdeal-modal .tabledesign .table tbody tr td,
+body.dark-theme .createdeal-modal .td-dealtitle {
+  color: #dce6f5 !important;
+  border-color: #3a4f67 !important;
+  background: transparent !important;
+}
+
+body.dark-theme .createdeal-modal .createby,
+body.dark-theme .createdeal-modal .dealreport-sec .createby {
+  border-color: #3a4f67 !important;
+}
+
+body.dark-theme .createdeal-modal .createby ul li {
+  color: #9fb2c9 !important;
+}
+
+body.dark-theme .createdeal-modal .createby ul li strong {
+  color: #e4ecf7 !important;
+}
+
+body.dark-theme .analysis-sec .visualcol,
+body.dark-theme .analysis-sec .analysis-card {
+  background: #152232 !important;
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .analysis-sec .visualcol-desc h2,
+body.dark-theme .analysis-sec .visualcol-desc p,
+body.dark-theme .analysis-sec .documents-new .shot-heading,
+body.dark-theme .analysis-sec .td-dealtitle,
+body.dark-theme .analysis-sec .leasedetails .la-question {
+  color: #dce6f5 !important;
+}
+
+body.dark-theme .analysis-sec .extraction-review-info span img.img-fluid {
+  filter: brightness(0) invert(1);
+}
+
+body.dark-theme .analysis-sec .editspan .edit,
+body.dark-theme .analysis-sec .editspan .edit i,
+body.dark-theme .analysis-sec .tdaction img {
+  filter: brightness(0) invert(1);
+  color: #dce6f5;
+}
+
+body.dark-theme .analysis-sec .documents-new {
+  border-bottom: 1px solid #3a4f67;
+  padding-bottom: 10px;
+}
+
+body.dark-theme .analysis-sec .accordion-design .card .card-header a.btn,
+body.dark-theme .analysis-sec .accordion-design .card .card-header a.btn::after {
+  color: #dce6f5 !important;
+}
+
+body.dark-theme .create-sec .accordion-design .card .card-header a.btn,
+body.dark-theme .create-sec .accordion-design .card .card-header a.btn::after {
+  color: #dce6f5 !important;
+}
+
+body.dark-theme .create-sec .shot-heading,
+body.dark-theme .create-sec .documents-new .shot-heading {
+  color: #dce6f5 !important;
+}
+
+.create-sec .deal-detail-card-wrap .deal-detail-card {
+  border: 0;
+  background: transparent;
+}
+
+.create-sec .deal-detail-card-wrap .deal-detail-card-header {
+  background: transparent;
+  border-bottom: 1px solid #cedcef;
+  color: #111827;
+  font-weight: 600;
+}
+
+.create-sec .deal-detail-card-wrap .deal-detail-card-body {
+  background: transparent;
+}
+
+body.dark-theme .create-sec .deal-detail-card-wrap,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-detail-card,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-detail-card-header,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-detail-card-body {
+  background: #152232 !important;
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-detail-card-header,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li label,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li span {
+  color: #dce6f5 !important;
+}
+
+body.dark-theme .create-sec .edit,
+body.dark-theme .create-sec .edit .la,
+body.dark-theme .create-sec .edit i,
+body.dark-theme .create-sec .edit i::before {
+  color: #dce6f5 !important;
+}
+
+body.dark-theme .la-question {
+  color: #78a9ff !important;
+}
+
+body.dark-theme .create-sec .tabledesign .table {
+  background: #152232;
+}
+
+body.dark-theme .create-sec .tabledesign .table thead tr th,
+body.dark-theme .create-sec .tabledesign .table tbody tr td {
+  background: #152232 !important;
+  color: #dce6f5 !important;
+  border-color: #3a4f67 !important;
+}
+
+body.dark-theme .create-sec .tabledesign .table tbody tr:hover td {
+  background: #1b2b3d !important;
+}
+
+body.dark-theme .create-sec .td-dealtitle {
+  color: #e4ecf7 !important;
+}
+
+body.dark-theme .tabledesign .tdaction a:first-child img {
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+/* Dashboard deals table dark mode */
+body.dark-theme .table-search .tabledesign.whitebg {
+  background: #152232 !important;
+  border-color: #2a3a4e !important;
+}
+
+body.dark-theme .table-search .tabledesign .table {
+  background: #152232;
+}
+
+body.dark-theme .table-search .tabledesign .table thead tr th,
+body.dark-theme .table-search .tabledesign .table tbody tr td {
+  background: #152232 !important;
+  color: #dce6f5 !important;
+  border-color: #3a4f67 !important;
+}
+
+body.dark-theme .table-search .tabledesign .table tbody tr:hover td {
+  background: #1b2b3d !important;
+}
+
+body.dark-theme .table-search .tabledesign .td-dealtitle,
+body.dark-theme .table-search .tabledesign .tdvalue,
+body.dark-theme .table-search .tabledesign .td-deallocation,
+body.dark-theme .table-search .tabledesign .status-d {
+  color: #e4ecf7 !important;
+}
+
+body.dark-theme .table-search .tabledesign .td-deallocation img.img-fluid,
+body.dark-theme .table-search .tabledesign .tdaction img {
+  filter: brightness(0) invert(1);
+}
+
+body.dark-theme .table-search .tabledesign .status1,
+body.dark-theme .table-search .tabledesign .status2,
+body.dark-theme .table-search .tabledesign .status3,
+body.dark-theme .table-search .tabledesign .status4 {
+  background: #2a3a4e;
+  color: #dce6f5;
+}
+
+body.dark-theme .analysis-sec .edit,
+body.dark-theme .analysis-sec .edit i {
+  color: #dce6f5 !important;
+  filter: none !important;
+}
+
+body.dark-theme .createdeal-modal.ndamodal .version-strip {
+  background: #152232;
+  border-color: #3a4f67;
+}
+
+body.dark-theme .createdeal-modal.ndamodal .version-strip h3,
+body.dark-theme .createdeal-modal.ndamodal .version-strip h4,
+body.dark-theme .createdeal-modal.ndamodal .version-strip ul li,
+body.dark-theme .createdeal-modal.ndamodal .version-strip ul li strong,
+body.dark-theme .createdeal-modal.ndamodal .version-strip ul li strong .latestresult {
+  color: #dce6f5 !important;
+}
+
+body.dark-theme .createdeal-modal.ndamodal .version-strip h4 {
+  border-color: #3a4f67;
+}
+
+body.dark-theme .createdeal-modal.ndamodal .version-strip .form-group .form-control {
+  background: #0f1b2a;
+  color: #dce6f5;
+  border-color: #3a4f67 !important;
+}
+
+body.dark-theme .createdeal-modal.ndamodal .version-strip .form-select {
+  --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23dce6f5' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  --bs-form-select-bg-icon: none;
+  background-image: var(--bs-form-select-bg-img) !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+}
+
+body.dark-theme .header-sec+.sticky-header.sticky-top {
+  border-color: #3a4f67;
+}
+
+body.dark-theme .accordion-design h3 {
+  color: #dce6f5;
+  background: #1a2b3f;
+}
+
+body.dark-theme .edit-form input {
+  color: #dce6f5;
+  background: #1a2b3f;
+  border-color: #3a4f67;
+}
+
+body.dark-theme .accordion-design ul ul {
+  border-bottom-color: #3a4f67;
+}
+
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li {
+  border-bottom-color: #3a4f67 !important;
+}
+
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li label,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li .editspan,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li .leasedetails,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li .editspan span,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li .editspan div,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li .leasedetails span,
+body.dark-theme .create-sec .deal-detail-card-wrap .deal-summary ul li .leasedetails div {
+  color: #dce6f5 !important;
+}
+
+.dark-theme .extraction-review-info .img-fluid {
+  filter: invert(1);
+}

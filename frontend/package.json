@@ -1,0 +1,52 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-basic-styles": "^48.0.1",
+    "@ckeditor/ckeditor5-image": "^48.0.1",
+    "@ckeditor/ckeditor5-react": "^11.1.2",
+    "@ckeditor/ckeditor5-table": "^48.0.1",
+    "@ckeditor/ckeditor5-upload": "^48.0.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.0.0",
+    "@mui/x-data-grid": "^9.0.1",
+    "@tanstack/react-query": "^5.96.2",
+    "@types/bootstrap": "^5.2.10",
+    "axios": "^1.13.6",
+    "bootstrap": "^5.3.8",
+    "ckeditor5": "^48.0.1",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.20",
+    "mathjs": "^15.2.0",
+    "quill": "^2.0.3",
+    "quill-better-table": "^1.2.10",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.1",
+    "recharts": "^3.8.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^24.12.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.57.0",
+    "vite": "^8.0.1"
+  }
+}
