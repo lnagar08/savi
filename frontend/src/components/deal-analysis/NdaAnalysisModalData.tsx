@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { ChangeEvent, DragEvent, FormEvent } from 'react';
+import type { DragEvent } from 'react';
 import uploadLinear from '../../assets/images/upload-linear.svg'
 import apiClient from '../../services/api';
 //import { ComprehensiveNdaResults } from './NdaComparisionResult';
@@ -14,10 +14,6 @@ interface NdaAnalysisData {
     createdAt: string;
     analysisResult?: Record<string, string> | any;
     parentId: number | null;
-}
-interface NdaFilesDataTableProps {
-  data: NdaAnalysisData[];
-  setNdaAnalyses: React.Dispatch<React.SetStateAction<NdaAnalysisData[]>>;
 }
 
 function NdaAnalysisModalData({dealId}: {dealId: string}) {

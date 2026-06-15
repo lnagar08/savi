@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -20,34 +20,7 @@ interface RentalCashflowProfileChartProps {
 }
 
 export const RentalCashflowProfileChart: React.FC<RentalCashflowProfileChartProps> = ({ data }) => {
-  
-const filteredTicks = useMemo(() => {
-  if (!data || data.length === 0) return [];
-
-  const ticks: string[] = [];
-  const seenYears = new Set<string>();
-
-  data.forEach((item, index) => {
-    const parts = item.date.split('-'); 
-    const year = parts[2]; 
-
-   
-    if (index === 0 || (year && !seenYears.has(year))) {
-      seenYears.add(year);
-      ticks.push(item.date); 
-    }
-  });
-
-  
-  const lastDate = data[data.length - 1].date;
-  if (!ticks.includes(lastDate)) {
-    ticks.push(lastDate);
-  }
-
-  return ticks;
-}, [data]);
-
-
+ 
   const formatCurrency = (value: number) => {
     if (value === 0) return '-';
     return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(value);

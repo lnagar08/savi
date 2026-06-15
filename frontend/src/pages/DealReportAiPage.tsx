@@ -33,7 +33,7 @@ function DealReportAiPage() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [reportContent, setReportContent] = useState('')
-  const [isUploading, setIsUploading] = useState(false)
+  //const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [dealData, setDealData] = useState<DealData | null>(null)
   const [reportName, setReportName] = useState('')
@@ -99,11 +99,15 @@ function DealReportAiPage() {
           const data = res.data?.data ?? res.data;
           
           setReportContent(data.rawContent || "");
+          setMode('edit')
+          setSelectedReportId(selectedReportId);
         } catch (err) {
           console.error("Error fetching:", err);
         }
       } else {
         setReportContent("");
+        setMode('create')
+        setSelectedReportId(null);  
       }
     };
   
@@ -170,7 +174,7 @@ function DealReportAiPage() {
     setErrorMessage('')
     setUploadedFile(file)
 
-    setIsUploading(true)
+    //setIsUploading(true)
     const formData = new FormData()
     formData.append('file', file)
     //formData.append('dealId', dealId)
@@ -195,7 +199,7 @@ function DealReportAiPage() {
       setReportContent('');
       setUploadedFile(null);
     } finally {
-      setIsUploading(false);
+      //setIsUploading(false);
     }
   }
 
