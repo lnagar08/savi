@@ -7,8 +7,6 @@ declare module 'pdf-parse-fork' {
     text: string;
     version: string;
   }
-
   function pdf(dataBuffer: Buffer, options?: any): Promise<PdfData>;
-  
   export = pdf;
 }

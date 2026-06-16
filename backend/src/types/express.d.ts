@@ -1,11 +1,14 @@
-import { User } from "../generated/prisma/client.ts";
+import * as express from 'express';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: Omit<User, "password">;
+      user?: {
+        id: string;
+        email: string;
+        role?: string;
+        [key: string]: any; 
+      };
     }
   }
 }
-
-export { };
