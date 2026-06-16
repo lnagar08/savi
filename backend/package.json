@@ -9,7 +9,8 @@
     "vercel-build": "prisma generate && tsc",
     "start": "node dist/index.js",
     "generate": "prisma generate",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
