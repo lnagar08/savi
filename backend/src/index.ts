@@ -67,5 +67,5 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`Server is running on port ${env.PORT || 5000}`);
   });
 }
-
+console.log(`Beckend Server`);
 export default app;
