@@ -1,3 +1,16 @@
+if (typeof global.DOMMatrix === 'undefined') {
+  // @ts-ignore
+  global.DOMMatrix = class DOMMatrix {
+    constructor() {}
+  };
+}
+
+if (typeof global.ImageData === 'undefined') {
+  // @ts-ignore
+  global.ImageData = class ImageData {
+    constructor() {}
+  };
+}
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import env from './config/env.js';
