@@ -1,5 +1,6 @@
 import { extname } from "node:path";
 //import { PDFParse } from "pdf-parse";
+import PDFParser from"pdf2json";
 import mammoth from "mammoth";
 import { CustomError } from "../lib/custom-error.js";
 
@@ -36,7 +37,7 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
   const extractedImages: ExtractedImage[] = [];
 
   try {
-    if (extension === ".pdf" || file.mimetype === "application/pdf") {
+   // if (extension === ".pdf" || file.mimetype === "application/pdf") {
       /*const parser = new PDFParse({ data: file.buffer });
       try {
         const parsedPdf = await parser.getText();
@@ -60,7 +61,43 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
       } finally {
         await parser.destroy();
       }*/
-    } else if (
+    //} 
+    
+    if (extension === ".pdf" || file.mimetype === "application/pdf") {
+  const parsedPdf = await new Promise<any>((resolve, reject) => {
+    const pdfParser = new PDFParser();
+ 
+    pdfParser.on("pdfParser_dataError", (errData: any) => {
+      reject(errData.parserError);
+    });
+ 
+    pdfParser.on("pdfParser_dataReady", (pdfData: any) => {
+      resolve(pdfData);
+    });
+ 
+    pdfParser.parseBuffer(file.buffer);
+  });
+ 
+  extractedPages =
+    parsedPdf.Pages?.map((page: any, pageIndex: number) => {
+      const text = page.Texts?.map((textItem: any) =>
+        textItem.R?.map((r: any) => decodeURIComponent(r.T)).join(" ")
+      ).join(" ") || "";
+ 
+      return {
+        page: pageIndex + 1,
+        text: normalizeExtractedText(text),
+        images: [],
+      };
+    }) || [];
+ 
+  if (extractedPages.length === 0) {
+    throw new CustomError(
+      "Unable to extract text from the uploaded PDF.",
+      422
+    );
+  }
+}else if (
       extension === ".docx" ||
       file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {

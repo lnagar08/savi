@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { prisma } from "../lib/prisma.js";
 import mammoth from "mammoth";
 //import { PDFParse } from "pdf-parse";
+import PDFParser from"pdf2json";
 import fs from 'fs';
 import path from 'path';
 const client = new OpenAI();
@@ -348,6 +349,39 @@ export const extractTextFromFile = async (filePath: string): Promise<string> => 
       //const parsedPdf = await parser.getText();
       //await parser.destroy(); 
       //return parsedPdf.text; 
+
+ const text = await new Promise<string>((resolve, reject) => {
+    const pdfParser = new PDFParser();
+ 
+    pdfParser.on("pdfParser_dataError", (errData) => {
+      reject(errData);
+    });
+ 
+    pdfParser.on("pdfParser_dataReady", (pdfData) => {
+      try {
+        let extractedText = "";
+ 
+        pdfData.Pages?.forEach((page: any) => {
+          page.Texts?.forEach((textItem: any) => {
+            textItem.R?.forEach((run: any) => {
+              extractedText += decodeURIComponent(run.T) + " ";
+            });
+          });
+ 
+          extractedText += "\n";
+        });
+ 
+        resolve(extractedText.trim());
+      } catch (error) {
+        reject(error);
+      }
+    });
+ 
+    pdfParser.parseBuffer(fileBuffer);
+
+    return text;
+  });
+  
     }
 
     if (extension === '.docx') {
