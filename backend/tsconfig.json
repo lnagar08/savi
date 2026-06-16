@@ -5,10 +5,7 @@
     "module": "nodenext",
     "target": "esnext",
     "strict": true,
-    "skipLibCheck": true,
-    "paths": {
-      "pdf-parse-fork": ["./src/types/pdf-parse-fork.d.ts"]
-    }
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts"
