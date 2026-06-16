@@ -1,16 +1,27 @@
 {
-    "experimentalServices": {
-        "frontend": {
-            "root": "frontend",
-            "routePrefix": "/",
-            "framework": "vite",
-            "installCommand": "npm install",
-            "buildCommand": "npm run build"
-        },
-        "backend": {
-            "root": "backend",
-            "entrypoint": "src/index.ts",
-            "routePrefix": "/api/(.*)" 
-        }
+  "experimentalServices": {
+    "frontend": {
+      "root": "frontend",
+      "routePrefix": "/",
+      "framework": "vite",
+      "installCommand": "npm install",
+      "buildCommand": "npm run build"
+    },
+    "backend": {
+      "root": "backend",
+      "entrypoint": "src/index.ts",
+      "routePrefix": "/api"
     }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1",
+      "check": true
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 }
