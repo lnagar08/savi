@@ -1,13 +1,27 @@
 {
   "version": 2,
-  "rewrites": [
+  "framework": null,
+  "builds": [
     {
-      "source": "/api/:match*",
-      "destination": "/backend/src/index.ts"
+      "src": "backend/src/index.ts",
+      "use": "@vercel/node"
     },
     {
-      "source": "/(.*)",
-      "destination": "/frontend/$1"
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/src/index.ts"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
     }
   ]
 }
