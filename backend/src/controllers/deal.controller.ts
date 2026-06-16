@@ -2,11 +2,11 @@ import type { Request, Response } from "express";
 import { CustomError } from "../lib/custom-error.js";
 import { prisma } from "../lib/prisma.js";
 import { extractDealFileContent } from "../services/deal.service.js";
-import { exportPdfPagesAsImages } from "../services/pdfExtractImage.js";
+//import { exportPdfPagesAsImages } from "../services/pdfExtractImage.js";
 import { extractInfo } from "../services/openai.service.js";
-import fs from "node:fs/promises";
+//import fs from "node:fs/promises";
 import { Prisma } from "../generated/prisma/client.js";
-import path from "node:path";
+//import path from "node:path";
  
 
 export const createDeal = async (req: Request, res: Response) => {
