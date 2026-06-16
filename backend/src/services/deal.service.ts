@@ -1,5 +1,5 @@
 import { extname } from "node:path";
-import { PDFParse } from "pdf-parse";
+//import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
 import { CustomError } from "../lib/custom-error.js";
 
@@ -37,7 +37,7 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
 
   try {
     if (extension === ".pdf" || file.mimetype === "application/pdf") {
-      const parser = new PDFParse({ data: file.buffer });
+      /*const parser = new PDFParse({ data: file.buffer });
       try {
         const parsedPdf = await parser.getText();
         const pdfPages = Array.isArray(parsedPdf.pages) ? parsedPdf.pages : [];
@@ -59,7 +59,7 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
         }
       } finally {
         await parser.destroy();
-      }
+      }*/
     } else if (
       extension === ".docx" ||
       file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
