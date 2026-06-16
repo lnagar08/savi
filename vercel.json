@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "framework": null,
   "builds": [
     {
       "src": "backend/src/index.ts",
@@ -8,7 +7,10 @@
     },
     {
       "src": "frontend/package.json",
-      "use": "@vercel/static-build"
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
@@ -17,11 +19,8 @@
       "dest": "backend/src/index.ts"
     },
     {
-      "handle": "filesystem"
-    },
-    {
       "src": "/(.*)",
-      "dest": "frontend/$1"
+      "dest": "/index.html"
     }
-  ] 
+  ]
 }
