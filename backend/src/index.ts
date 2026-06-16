@@ -1,16 +1,3 @@
-// @ts-ignore
-globalThis.DOMMatrix = class DOMMatrix {};
-// @ts-ignore
-globalThis.ImageData = class ImageData {};
-// @ts-ignore
-globalThis.Path2D = class Path2D {};
-
-const originalRequire = require('module').createRequire(import.meta.url);
-try {
-  // @ts-ignore
-  require.cache[originalRequire.resolve('@napi-rs/canvas')] = { exports: {} };
-} catch (e) {}
-
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import env from './config/env.js';
