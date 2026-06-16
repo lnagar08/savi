@@ -10,7 +10,7 @@ import {
 import { resetPasswordSchema, signinSchema, signupSchema } from "../schemas/auth.schema.js";
 import { CustomError } from "../lib/custom-error.js";
 import crypto from "crypto";
-
+import { AuthenticatedRequest } from '../types/express.js';
 const accessTokenMaxAge = 7 * 24 * 60 * 60 * 1000;
 const refreshTokenMaxAge = 30 * 24 * 60 * 60 * 1000;
 
@@ -148,7 +148,7 @@ export const refresh = async (req: Request, res: Response) => {
 };
 
 export const me = async (req: Request, res: Response) => {
-  const user = req.user;
+  const user = (req as AuthenticatedRequest).user;
 
   if (!user) {
     throw new CustomError("Unauthorized", 401);

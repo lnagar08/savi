@@ -6,7 +6,7 @@ import { CustomError } from "../lib/custom-error.js";
 import fs from 'fs'; // Put this at the very top of your file
 import OpenAI from "openai";
 const client = new OpenAI();
-
+import { AuthenticatedRequest } from '../types/express.js';
 export const createBidLetter = async (req: Request, res: Response) => {
   try {
     
@@ -40,7 +40,7 @@ export const createBidLetter = async (req: Request, res: Response) => {
       }
     });
 
-    const userIdString = typeof req.user === 'object' ? (req.user as any).id : req.user;
+    const userIdString = typeof (req as AuthenticatedRequest).user === 'object' ? (req as AuthenticatedRequest).user!.id : (req as AuthenticatedRequest).user;
 
     const userIdParsed = Number(userIdString);
 

@@ -7,9 +7,9 @@ import { extractInfo } from "../services/openai.service.js";
 //import fs from "node:fs/promises";
 import { Prisma } from "../generated/prisma/client.js";
 //import path from "node:path";
- import { AuthenticatedRequest } from '../types/express.js';
+import { AuthenticatedRequest } from '../types/express.js';
 
-export const createDeal = async (req: AuthenticatedRequest, res: Response) => {
+export const createDeal = async (req: Request, res: Response) => {
   const { name } = req.body;
   const file = req.file;
   if (!name) throw new CustomError("Deal name is required", 400);
@@ -77,7 +77,7 @@ const data = await extractInfo(pages)
   ];
   const deal = await prisma.deal.create({
     data: {
-      userId: Number(req.user!.id),
+      userId: Number((req as AuthenticatedRequest).user!.id),
       name: name,
       assetClass: deal_identification?.asset_class ?? null,
       extracted_deal_summary: extracted_deal_summary,
@@ -248,7 +248,7 @@ const data = await extractInfo(pages)
           contentType: file.mimetype,
           name: file.originalname,
           url: `/uploads/${filename}`,
-          userId: Number(req.user!.id),
+          userId: Number((req as AuthenticatedRequest).user!.id),
           size: file.size,
         }
       }
@@ -280,8 +280,8 @@ export const parseDeal = async (req: Request, res: Response) => {
 
 
 
-export const getDeals = async (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
+export const getDeals = async (req: Request, res: Response) => {
+  const user = (req as AuthenticatedRequest).user!;
   const {
     page: pageRaw,
     limit: limitRaw,
@@ -401,8 +401,8 @@ export const getDeals = async (req: AuthenticatedRequest, res: Response) => {
   });
 };
 
-export const getDealById = async (req: AuthenticatedRequest, res: Response) => {
-  const user = req.user!;
+export const getDealById = async (req: Request, res: Response) => {
+  const user = (req as AuthenticatedRequest).user!;
 
   const dealId = Number(req.params.id);
   if (!Number.isInteger(dealId) || dealId <= 0) {
@@ -461,7 +461,7 @@ export const getDealById = async (req: AuthenticatedRequest, res: Response) => {
   });
 };
 
-export const updateInputs = async (req: AuthenticatedRequest, res: Response) => {
+export const updateInputs = async (req: Request, res: Response) => {
   try {
     const { dealId } = req.params;
     const dealIdNum = Number(dealId);
@@ -489,7 +489,7 @@ export const updateInputs = async (req: AuthenticatedRequest, res: Response) => 
     const deal = await prisma.deal.findFirst({
         where: {
             id: dealIdNum,
-            userId: Number(req.user!.id),
+            userId: (req as AuthenticatedRequest).user!.id,
         },
         include: {
             lease_information: true,

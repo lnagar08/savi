@@ -23,7 +23,7 @@ const getAccessTokenFromRequest = (req: Request): string | undefined => {
 };
 
 export const authMiddleware = async (
-  req: AuthenticatedRequest,
+  req: Request,
   _res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -47,7 +47,7 @@ export const authMiddleware = async (
     throw new CustomError("User not found", 404);
   }
 
-  req.user = user;
+  (req as AuthenticatedRequest).user = user;
   next();
 };
 
