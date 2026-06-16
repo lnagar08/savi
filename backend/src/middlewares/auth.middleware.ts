@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { verifyAccessToken } from "../lib/jwt.js";
 import { prisma } from "../lib/prisma.js";
 import { CustomError } from "../lib/custom-error.js";
-
+import { AuthenticatedRequest } from '../types/express.js';
 const getAccessTokenFromRequest = (req: Request): string | undefined => {
   const cookieToken = req.cookies?.accessToken as string | undefined;
   if (cookieToken) {
@@ -23,7 +23,7 @@ const getAccessTokenFromRequest = (req: Request): string | undefined => {
 };
 
 export const authMiddleware = async (
-  req: Request,
+  req: AuthenticatedRequest,
   _res: Response,
   next: NextFunction,
 ): Promise<void> => {

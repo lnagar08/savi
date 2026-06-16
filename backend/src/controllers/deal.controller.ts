@@ -7,9 +7,9 @@ import { extractInfo } from "../services/openai.service.js";
 //import fs from "node:fs/promises";
 import { Prisma } from "../generated/prisma/client.js";
 //import path from "node:path";
- 
+ import { AuthenticatedRequest } from '../types/express.js';
 
-export const createDeal = async (req: Request, res: Response) => {
+export const createDeal = async (req: AuthenticatedRequest, res: Response) => {
   const { name } = req.body;
   const file = req.file;
   if (!name) throw new CustomError("Deal name is required", 400);
@@ -280,7 +280,7 @@ export const parseDeal = async (req: Request, res: Response) => {
 
 
 
-export const getDeals = async (req: Request, res: Response) => {
+export const getDeals = async (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
   const {
     page: pageRaw,
@@ -401,7 +401,7 @@ export const getDeals = async (req: Request, res: Response) => {
   });
 };
 
-export const getDealById = async (req: Request, res: Response) => {
+export const getDealById = async (req: AuthenticatedRequest, res: Response) => {
   const user = req.user!;
 
   const dealId = Number(req.params.id);
@@ -461,7 +461,7 @@ export const getDealById = async (req: Request, res: Response) => {
   });
 };
 
-export const updateInputs = async (req: Request, res: Response) => {
+export const updateInputs = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { dealId } = req.params;
     const dealIdNum = Number(dealId);

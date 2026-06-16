@@ -1,13 +1,11 @@
-import * as express from 'express';
+import { Request } from 'express';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: {
-      id: number;
-      email: string;
-      name?: string;
-      role?: string;
-      [key: string]: any;
-    };
-  }
+export interface AuthenticatedRequest extends Request {
+  user: {
+    id: number;
+    email: string;
+    name?: string;
+    role?: string;
+    [key: string]: any;
+  };
 }
