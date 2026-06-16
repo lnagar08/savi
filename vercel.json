@@ -10,8 +10,7 @@
         "backend": {
             "root": "backend",
             "entrypoint": "src/index.ts",
-            "routePrefix": "/api",
-            "buildCommand": "npm run build"
+            "routePrefix": "/(.*)" 
         }
     }
 }
