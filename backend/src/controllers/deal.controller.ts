@@ -77,7 +77,7 @@ const data = await extractInfo(pages)
   ];
   const deal = await prisma.deal.create({
     data: {
-      userId: req.user!.id,
+      userId: Number(req.user!.id),
       name: name,
       assetClass: deal_identification?.asset_class ?? null,
       extracted_deal_summary: extracted_deal_summary,
@@ -248,7 +248,7 @@ const data = await extractInfo(pages)
           contentType: file.mimetype,
           name: file.originalname,
           url: `/uploads/${filename}`,
-          userId: req.user!.id,
+          userId: Number(req.user!.id),
           size: file.size,
         }
       }
@@ -338,7 +338,7 @@ export const getDeals = async (req: Request, res: Response) => {
   };
 
   const where: Prisma.DealWhereInput = {
-    userId: user.id
+    userId: Number(user.id)
   };
 
   if (search) {
@@ -419,7 +419,7 @@ export const getDealById = async (req: Request, res: Response) => {
   const deal = await prisma.deal.findFirst({
     where: {
       id: dealId,
-      userId: user.id,
+      userId: Number(user.id),
     },
     include: {
       documents: {
@@ -489,7 +489,7 @@ export const updateInputs = async (req: Request, res: Response) => {
     const deal = await prisma.deal.findFirst({
         where: {
             id: dealIdNum,
-            userId: req.user!.id,
+            userId: Number(req.user!.id),
         },
         include: {
             lease_information: true,
