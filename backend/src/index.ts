@@ -29,8 +29,8 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-app.use('/api', mainRouter);
-
+//app.use('/api', mainRouter);
+app.use(['/api', '/'], mainRouter);
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
   console.log(error)
   if (error instanceof CustomError) {
