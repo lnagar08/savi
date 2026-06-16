@@ -36,6 +36,12 @@ const issueAuthCookies = (res: Response, accessToken: string, refreshToken: stri
   res.cookie("accessToken", accessToken, accessTokenOptions);
   res.cookie("refreshToken", refreshToken, refreshTokenOptions);
 };
+export const check = async (req: Request, res: Response) => {
+  res.status(201).json({
+    success: true,
+    message: "Signup successful"
+  });
+}
 
 export const signup = async (req: Request, res: Response) => {
   const parsedBody = signupSchema.safeParse(req.body);

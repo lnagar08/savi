@@ -3,7 +3,7 @@ import * as auth from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const authRouter = Router();
-
+authRouter.get("/check", auth.check);
 authRouter.post("/signup", auth.signup);
 authRouter.post("/signin", auth.signin);
 authRouter.post("/refresh", auth.refresh);
