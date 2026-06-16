@@ -2,9 +2,9 @@ import { extname } from "node:path";
 import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
 import { CustomError } from "../lib/custom-error.js";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"; 
+//import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"; 
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = "pdf-parse/node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs";
+//pdfjsLib.GlobalWorkerOptions.workerSrc = "pdf-parse/node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs";
 
 const allowedMimeTypes = new Set<string>([
   "application/pdf",
