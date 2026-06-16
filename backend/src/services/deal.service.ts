@@ -1,5 +1,5 @@
 import { extname } from "node:path";
-import PDFParse from "pdf-parse-fork";
+import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
 import { CustomError } from "../lib/custom-error.js";
 //import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs"; 
@@ -40,28 +40,28 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
 
   try {
     if (extension === ".pdf" || file.mimetype === "application/pdf") {
-      const parser = await PDFParse(file.buffer);
+      const parser = new PDFParse({ data: file.buffer });
       try {
-        const parsedPdf = parser.text;
-        //const pdfPages = Array.isArray(parsedPdf.pages) ? parsedPdf.pages : [];
-        /*
+        const parsedPdf = await parser.getText();
+        const pdfPages = Array.isArray(parsedPdf.pages) ? parsedPdf.pages : [];
+
         extractedPages = pdfPages.map((pdfPage, index) => ({
           page: typeof pdfPage.num === "number" ? pdfPage.num : index + 1,
           text: normalizeExtractedText(pdfPage.text ?? ""),
           images: [],
         }));
-        */
+
         if (extractedPages.length === 0) {
           extractedPages = [
             {
               page: 1,
-              text: normalizeExtractedText(parsedPdf ?? ""),
+              text: normalizeExtractedText(parsedPdf.text ?? ""),
               images: [],
             },
           ];
         }
       } finally {
-        //await parser.destroy();
+        await parser.destroy();
       }
     } else if (
       extension === ".docx" ||
