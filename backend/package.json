@@ -18,7 +18,7 @@
   "dependencies": {
     "@adobe/pdfservices-node-sdk": "^4.1.0",
     "@hono/node-server": "^1.19.14",
-    "@napi-rs/canvas": "^1.0.0",
+    "@napi-rs/canvas": "^0.1.100",
     "@pdf-lib/upng": "^1.0.1",
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
