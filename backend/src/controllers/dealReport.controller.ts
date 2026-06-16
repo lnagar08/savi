@@ -36,7 +36,7 @@ export const generateDealReport = async (req: Request, res: Response) => {
             dealId: dealId, 
             fileName: name,
             fileUrl: `/uploads/${filename}`,
-            rawContent: pages[0]?.text ?? "", 
+            reportContent: pages[0]?.text ?? "", 
         }
     });
     res.status(201).json({
