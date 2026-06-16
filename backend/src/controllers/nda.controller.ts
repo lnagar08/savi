@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import OpenAI from "openai";
 import { prisma } from "../lib/prisma.js";
 import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
+import PDFParse from "pdf-parse-fork";
 import fs from 'fs';
 import path from 'path';
 const client = new OpenAI();
@@ -344,10 +344,10 @@ export const extractTextFromFile = async (filePath: string): Promise<string> => 
 
   try {
     if (extension === '.pdf') {
-      const parser = new PDFParse({ data: fileBuffer });
-      const parsedPdf = await parser.getText();
-      await parser.destroy(); 
-      return parsedPdf.text; 
+      const parser = await PDFParse(fileBuffer);
+      const parsedPdf = parser.text;
+      //await parser.destroy(); 
+      return parsedPdf; 
     }
 
     if (extension === '.docx') {
