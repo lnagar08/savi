@@ -12,16 +12,5 @@
       "entrypoint": "src/index.ts",
       "routePrefix": "/api"
     }
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1",
-      "check": true
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  }
 }

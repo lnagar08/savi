@@ -15,13 +15,16 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+//app.use(cors({
+ // origin: (origin, callback) => {
+ //   callback(null, true);
+//  },
+//  credentials: true,
+//}))
 app.use(cors({
-  origin: (origin, callback) => {
-    callback(null, true);
-  },
-  credentials: true,
-}))
-
+  origin: true, 
+  credentials: true
+}));
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
