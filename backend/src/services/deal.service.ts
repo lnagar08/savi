@@ -79,17 +79,21 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
   });
  
   extractedPages =
-    parsedPdf.Pages?.map((page: any, pageIndex: number) => {
-      const text = page.Texts?.map((textItem: any) =>
-        textItem.R?.map((r: any) => decodeURIComponent(r.T)).join(" ")
-      ).join(" ") || "";
- 
-      return {
-        page: pageIndex + 1,
-        text: normalizeExtractedText(text),
-        images: [],
-      };
-    }) || [];
+  parsedPdf.Pages?.map((page: any, pageIndex: number) => {
+    const text = page.Texts?.map((textItem: any) => {
+      if (!textItem.R) return "";
+
+      return textItem.R
+        .map((r: any) => safeDecode(r.T || ""))
+        .join(" ");
+    }).join(" ") || "";
+
+    return {
+      page: pageIndex + 1,
+      text: normalizeExtractedText(text),
+      images: [],
+    };
+  }) || [];
  
   if (extractedPages.length === 0) {
     throw new CustomError(
@@ -141,3 +145,11 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
 
   return extractedPages;
 };
+
+export const safeDecode =  (text: string): string => {
+  try {
+    return decodeURIComponent(text.replace(/\+/g, " "));
+  } catch {
+    return text;
+  }
+}

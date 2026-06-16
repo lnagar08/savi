@@ -349,38 +349,31 @@ export const extractTextFromFile = async (filePath: string): Promise<string> => 
       //const parsedPdf = await parser.getText();
       //await parser.destroy(); 
       //return parsedPdf.text; 
-
- const text = await new Promise<string>((resolve, reject) => {
+const parsedPdf: any = await new Promise((resolve, reject) => {
     const pdfParser = new PDFParser();
- 
-    pdfParser.on("pdfParser_dataError", (errData) => {
-      reject(errData);
-    });
- 
-    pdfParser.on("pdfParser_dataReady", (pdfData) => {
-      try {
-        let extractedText = "";
- 
-        pdfData.Pages?.forEach((page: any) => {
-          page.Texts?.forEach((textItem: any) => {
-            textItem.R?.forEach((run: any) => {
-              extractedText += decodeURIComponent(run.T) + " ";
-            });
-          });
- 
-          extractedText += "\n";
-        });
- 
-        resolve(extractedText.trim());
-      } catch (error) {
-        reject(error);
-      }
-    });
- 
-    pdfParser.parseBuffer(fileBuffer);
 
-    return text;
+    pdfParser.on("pdfParser_dataError", (errData: any) => {
+      reject(errData.parserError);
+    });
+
+    pdfParser.on("pdfParser_dataReady", (pdfData: any) => {
+      resolve(pdfData);
+    });
+
+    pdfParser.parseBuffer(fileBuffer);
   });
+
+  if (!parsedPdf?.Pages) {
+    throw new Error("Invalid PDF structure");
+  }
+
+  const text = parsedPdf.Pages.map((page: any) => {
+    return page.Texts?.map((textItem: any) => {
+      return textItem.R?.map((r: any) => safeDecode(r.T || "")).join(" ") || "";
+    }).join(" ") || "";
+  }).join("\n");
+
+  return text;
   
     }
 
@@ -448,4 +441,10 @@ export const crossCampareClause = async (req: Request, res: Response): Promise<v
     res.status(500).json({ message: error.message || 'Internal Server pipeline crashed.' });
   }
 }
-
+export const safeDecode =  (text: string): string => {
+  try {
+    return decodeURIComponent(text.replace(/\+/g, " "));
+  } catch {
+    return text;
+  }
+}
