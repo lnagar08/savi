@@ -149,7 +149,7 @@ function InputDealModal({ inputs, curve, dealId }: InputDealModalProps) {
                              {*/}
                         <div className="col-6">
                             <label className="form-label">Purchaser Cost (%)</label>
-                            <input type="number" className="form-control" name="purchaserCosts" value={formData.purchaserCosts.toFixed(2)} onChange={handleChange} required />
+                            <input type="number" className="form-control" name="purchaserCosts" value={formData.purchaserCosts} onChange={handleChange} required />
                         </div>
 
                         <div className="col-6">
