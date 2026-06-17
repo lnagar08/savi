@@ -364,7 +364,7 @@ function DealAnalysisDetailsPage() {
   
   const [editData, setEditData] = useState({id: 0 });
 
-  const openEditModal = (id: number) => {
+  /*const openEditModal = (id: number) => {
     setModalMode('edit');
     setEditData({
       id: id
@@ -376,7 +376,7 @@ function DealAnalysisDetailsPage() {
       const modal = new bootstrap.Modal(modalElement);
       modal.show();
     }
-  };
+  };*/
 
   const handleDeleteBid = async (bidId: number) => {
   if (window.confirm("Are you sure you want to remove this bid letter?")) {
@@ -916,9 +916,19 @@ const sensitivityChart = results.sensitivityChartData;
                                 
                                 <td className="tdaction">
                                  
-                                  <button className="btn btn-edit" onClick={() => openEditModal(bid.id)}>
+                                  <button 
+                                    type="button"
+                                    className="btn btn-edit" 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#myModal3"
+                                    onClick={() => {
+                                      setModalMode('edit');
+                                      setEditData({ id: bid.id }); 
+                                    }}
+                                  >
                                     <i className="fa fa-edit"></i>
                                   </button>
+                                   
                                   <button className="btn" onClick={() => handleDeleteBid(bid.id)}>
                                     <img src={tddelete} className="img-fluid" alt="Delete" />
                                   </button>
