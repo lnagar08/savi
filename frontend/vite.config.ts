@@ -15,7 +15,7 @@ export default defineConfig({
       '/api': {
         target: 'https://savi-three-sigma.vercel.app', // REMOVED trailing slash
         changeOrigin: true,
-        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },

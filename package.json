@@ -1,7 +1,7 @@
 {
-  "name": "savi-root",
+  "name": "savi-monorepo",
   "version": "1.0.0",
   "scripts": {
-    "build": "npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "cd backend && npm install && cd ../frontend && npm install && npm run build"
   }
 }
