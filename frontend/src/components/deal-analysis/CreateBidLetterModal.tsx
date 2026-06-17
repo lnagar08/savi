@@ -145,7 +145,29 @@ const handleClose = () => {
     }
     e.currentTarget.value = ''
   }
+const uploadToCloudinary = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "Savitest"); // from Cloudinary
+  formData.append("resource_type", "auto");
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dvlp9r6uu/auto/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
+  if (!res.ok) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  const data = await res.json();
+  return {
+    url: data.secure_url,
+    publicId: data.public_id,
+  };
+};
   const handleUploadFile = async (fileToUpload?: File) => {
     const file = fileToUpload ?? uploadedFile
     if (!file) {
@@ -164,15 +186,27 @@ const handleClose = () => {
     setUploadedFile(file)
 
     //setIsUploading(true)
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('dealId', dealId)
+    //const formData = new FormData()
+    //formData.append('file', file)
+    //formData.append('dealId', dealId)
+    const uploadResult = await uploadToCloudinary(file);
+    const fileMeta = {
+      fileName: file.name,
+      fileSize: file.size,
+      //fileType: file.type,
+      extension: file.name.split('.').pop(),
+    };
     try {
-      const res = await apiClient.post('/bidLetter', formData, {
+      /*const res = await apiClient.post('/bidLetter', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }
-      })
+      })*/
+     const res = await apiClient.post('/bidLetter', {
+          file: uploadResult.url,
+          dealId: dealId,
+          ...fileMeta,
+        });
       if (res.status === 200 || res.status === 201) {
        
         setBidLetterContent(res.data.data);

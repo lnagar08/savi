@@ -12,7 +12,8 @@ const upload = multer({
   },
 });
 
-bidLetterRouter.post("/", authMiddleware, upload.single("file"), createBidLetter);
+//bidLetterRouter.post("/", authMiddleware, upload.single("file"), createBidLetter);
+bidLetterRouter.post("/", authMiddleware, createBidLetter);
 bidLetterRouter.get("/bid/:id", authMiddleware, getBidLetterByBidId);
 bidLetterRouter.get("/:id", authMiddleware, getBidLetterById);
 bidLetterRouter.put("/:id", authMiddleware, updateBidLetterById);

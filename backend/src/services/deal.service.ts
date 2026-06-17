@@ -3,7 +3,7 @@ import { extname } from "node:path";
 import PDFParser from"pdf2json";
 import mammoth from "mammoth";
 import { CustomError } from "../lib/custom-error.js";
-
+import axios from "axios";
 const allowedMimeTypes = new Set<string>([
   "application/pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -24,14 +24,14 @@ export type ParsedDealPage = {
 
 export type ParsedDealFile = ParsedDealPage[];
 
-export const extractDealFileContent = async (file: Express.Multer.File): Promise<ParsedDealFile> => {
-  const extension = extname(file.originalname).toLowerCase();
-  const hasAllowedMimeType = allowedMimeTypes.has(file.mimetype);
-  const hasAllowedExtension = extension === ".pdf" || extension === ".docx";
+export const extractDealFileContent = async (file: string, ext: string): Promise<ParsedDealFile> => {
+  //const extension = extname(file.originalname).toLowerCase();
+  //const hasAllowedMimeType = allowedMimeTypes.has(file.mimetype);
+  //const hasAllowedExtension = extension === ".pdf" || extension === ".docx";
 
-  if (!hasAllowedMimeType && !hasAllowedExtension) {
-    throw new CustomError("Invalid file type. Only PDF or DOCX is allowed.", 400);
-  }
+  //if (!hasAllowedMimeType && !hasAllowedExtension) {
+  //  throw new CustomError("Invalid file type. Only PDF or DOCX is allowed.", 400);
+  //}
 
   let extractedPages: ParsedDealFile = [];
   const extractedImages: ExtractedImage[] = [];
@@ -63,8 +63,18 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
       }*/
     //} 
     
-    if (extension === ".pdf" || file.mimetype === "application/pdf") {
+    if (ext === "pdf") {
+
+        const response = await axios.get(file, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(response.data);
+//console.log('file buffer', buffer);
       const parsedPdf = await new Promise<any>((resolve, reject) => {
+
+        
+
+  
         const pdfParser = new PDFParser();
     
         pdfParser.on("pdfParser_dataError", (errData: any) => {
@@ -75,7 +85,7 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
           resolve(pdfData);
         });
     
-        pdfParser.parseBuffer(file.buffer);
+        pdfParser.parseBuffer(buffer);
       });
     
       extractedPages =
@@ -102,14 +112,18 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
         );
       }
     }else if (
-      extension === ".docx" ||
-      file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ext === "docx" 
+      //file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
-      const parsedDocx = await mammoth.extractRawText({ buffer: file.buffer });
+       const response = await axios.get(file, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(response.data);
+      const parsedDocx = await mammoth.extractRawText({ buffer: buffer });
 
       // Extract embedded DOCX images and expose them as data URIs.
       await mammoth.convertToHtml(
-        { buffer: file.buffer },
+        { buffer: buffer },
         {
           convertImage: mammoth.images.imgElement(async (image) => {
             const base64 = await image.readAsBase64String();

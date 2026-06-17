@@ -877,7 +877,8 @@ const sensitivityChart = results.sensitivityChartData;
                               <td>{new Date(doc.createdAt).toLocaleString('en-IN')}</td>
                               <td>{doc.user.name}</td>
                               <td className="tdaction">
-                                <a href={`${apiClient.defaults.baseURL}${doc.url}`} target="_blank" rel="noopener noreferrer">
+                                {/*<a href={`${apiClient.defaults.baseURL}${doc.url}`} target="_blank" rel="noopener noreferrer">*/}
+                                <a href={`${doc.url}`} target="_blank" rel="noopener noreferrer">
                                   <img src={tdeye} className="img-fluid" alt="" />
                                 </a>
                                 <a href="#"><img src={tddelete} className="img-fluid" alt="" /></a>

@@ -44,7 +44,7 @@ export const createDeal = async (req: Request, res: Response) => {
   //  fs.writeFileSync(`./uploads/${filename}`, file.buffer);
   //})
 
-const pages = await extractDealFileContent(fileUrl);
+const pages = await extractDealFileContent(fileUrl, extension);
 const data = await extractInfo(pages)
 
 //const extractedFiles = await exportPdfPagesAsImages(`./uploads/${filename}`);
@@ -276,13 +276,13 @@ export const parseDeal = async (req: Request, res: Response) => {
     throw new CustomError("File is required. Upload a PDF or DOCX file.", 400);
   }
 
-  const pages = await extractDealFileContent(file);
-  const data = await extractInfo(pages);
+  //const pages = await extractDealFileContent(file);
+  //const data = await extractInfo(pages);
 
   res.status(200).json({
     success: true,
     message: "Deal file parsed successfully",
-    data,
+    //data,
   });
 };
 

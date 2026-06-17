@@ -242,9 +242,9 @@ const uploadToCloudinary = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", "Savitest"); // from Cloudinary
-
+  formData.append("resource_type", "auto");
   const res = await fetch(
-    "https://api.cloudinary.com/v1_1/dvlp9r6uu/upload",
+    "https://api.cloudinary.com/v1_1/dvlp9r6uu/auto/upload",
     {
       method: "POST",
       body: formData,
@@ -256,7 +256,6 @@ const uploadToCloudinary = async (file: File) => {
   }
 
   const data = await res.json();
-
   return {
     url: data.secure_url,
     publicId: data.public_id,

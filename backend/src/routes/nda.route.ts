@@ -53,7 +53,8 @@ router.post(
 */
 router.get("/:dealId", authMiddleware, ndaListByDeal);
 
-router.post('/upload', authMiddleware, upload.single('file'), uploadAndAnalyzeNda);
+//router.post('/upload', authMiddleware, upload.single('file'), uploadAndAnalyzeNda);
+router.post('/upload', authMiddleware, uploadAndAnalyzeNda);
 router.post('/cross-compare-clauses', authMiddleware, crossCampareClause);
 
 export default router;

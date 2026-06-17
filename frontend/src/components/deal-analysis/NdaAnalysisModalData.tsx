@@ -115,24 +115,64 @@ const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, fileType
     await uploadFileToDatabase(selectedFile, fileType);
   }
 };
+const uploadToCloudinary = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "Savitest"); // from Cloudinary
+  formData.append("resource_type", "auto");
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dvlp9r6uu/auto/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  const data = await res.json();
+  return {
+    url: data.secure_url,
+    publicId: data.public_id,
+  };
+};
 
 const uploadFileToDatabase = async (file: File, fileType: 'house' | 'counterparty') => {
   if (fileType === 'house') setIsUploadingHouse(true);
   if (fileType === 'counterparty') setIsUploadingCounterparty(true);
   setGlobalError(null);
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("dealId", String(dealId));
-  formData.append("fileType", fileType);
-  formData.append("version", "1");
+  //const formData = new FormData();
+  
+
+  const uploadResult = await uploadToCloudinary(file);
+  //formData.append("file", uploadResult.url);
+ // formData.append("dealId", String(dealId));
+ // formData.append("fileType", fileType);
+ // formData.append("version", "1");
+  const fileMeta = {
+      fileName: file.name,
+      fileSize: file.size,
+      //fileType: file.type,
+      extension: file.name.split('.').pop(),
+    };
 
   try {
-    const res = await apiClient.post(`/ndaAnalysis/upload`, formData, {
+    /*const res = await apiClient.post(`/ndaAnalysis/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
+    });*/
+
+    const res = await apiClient.post('/ndaAnalysis/upload', {
+          file: uploadResult.url,
+          dealId: String(dealId),
+          fileType: fileType,
+          version: "1",
+          ...fileMeta,
+        });
 
     if (res.status === 200 || res.status === 201) {
       const newUploadedItem = res.data; 

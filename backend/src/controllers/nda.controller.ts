@@ -7,7 +7,7 @@ import PDFParser from"pdf2json";
 import fs from 'fs';
 import path from 'path';
 const client = new OpenAI();
-
+import axios from "axios";
 // Strict JSON schema matching your frontend UI
 const ndaSchema = {
   type: "object",
@@ -240,26 +240,27 @@ export const ndaListByDeal = async (req: Request, res: Response, next: NextFunct
 
 export const uploadAndAnalyzeNda = async (req: Request, res: Response): Promise<void> => {
   try {
+    
     // 1. Check if Multer successfully caught the file
-    if (!req.file) {
-      res.status(400).json({ message: 'No file found in payload payload.' });
-      return;
-    }
+    //if (!req.file) {
+    //  res.status(400).json({ message: 'No file found in payload payload.' });
+   //   return;
+   // }
 
     //const { dealId, fileType } = req.body;
-    const { dealId, parentId, version, fileType } = req.body;
+    const { dealId, parentId, version, fileType, file, fileName, extension } = req.body;
 
     if (!dealId || !fileType) {
       res.status(400).json({ error: "Missing mandatory multi-part form tracking metadata parameters." });
     }
-    const fileUrl = `/uploads/${req.file.filename}`;
-    const localFilePath = req.file.path;
+   // const fileUrl = `/uploads/${req.file.filename}`;
+   // const localFilePath = req.file.path;
     const currentDealIdInt = parseInt(dealId, 10);
     const nextVersionInt = parseInt(version, 10);
     const targetParentId = parentId ? parseInt(parentId, 10) : null;
 
     // 2. Parse payload text out of downloaded documents
-    const documentText = await extractTextFromFile(localFilePath);
+    const documentText = await extractTextFromFile(file, extension);
 
     const promptMessage = `
   Analyze the provided document content.
@@ -323,8 +324,8 @@ extractedArray.forEach((item: { clauseName: string; clauseValue: string }) => {
         dealId: Number(currentDealIdInt), 
         parentId: targetParentId,
         type: fileType,
-        fileName: req.file.originalname,
-        fileUrl: fileUrl,
+        fileName: fileName,
+        fileUrl: file,
         analysisResult: clauseJsonResult,
         version: nextVersionInt === 1 ? 1 : nextVersionInt, // Default to version 1 if not provided
         createdAt: new Date()
@@ -339,16 +340,21 @@ extractedArray.forEach((item: { clauseName: string; clauseValue: string }) => {
   }
 };
 
-export const extractTextFromFile = async (filePath: string): Promise<string> => {
-  const fileBuffer = fs.readFileSync(filePath); 
-  const extension = path.extname(filePath).toLowerCase();
+export const extractTextFromFile = async (filePath: string, extension: string): Promise<string> => {
+ // const fileBuffer = fs.readFileSync(filePath); 
+ // const extension = path.extname(filePath).toLowerCase();
 
   try {
-    if (extension === '.pdf') {
+    if (extension === 'pdf') {
       //const parser = new PDFParse({ data: fileBuffer });
       //const parsedPdf = await parser.getText();
       //await parser.destroy(); 
       //return parsedPdf.text; 
+      const response = await axios.get(filePath, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(response.data);
+
 const parsedPdf: any = await new Promise((resolve, reject) => {
     const pdfParser = new PDFParser();
 
@@ -360,7 +366,7 @@ const parsedPdf: any = await new Promise((resolve, reject) => {
       resolve(pdfData);
     });
 
-    pdfParser.parseBuffer(fileBuffer);
+    pdfParser.parseBuffer(buffer);
   });
 
   if (!parsedPdf?.Pages) {
@@ -377,8 +383,12 @@ const parsedPdf: any = await new Promise((resolve, reject) => {
   
     }
 
-    if (extension === '.docx') {
-      const result = await mammoth.extractRawText({ buffer: fileBuffer });
+    if (extension === 'docx') {
+      const response = await axios.get(filePath, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(response.data);
+      const result = await mammoth.extractRawText({ buffer: buffer });
       return result.value; 
     }
 

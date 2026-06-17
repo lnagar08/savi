@@ -7,7 +7,7 @@ import path from 'path';
 import JSZip from 'jszip';
 import { extractImages, getDocumentProxy } from 'unpdf'
 import sharp from 'sharp';
-
+import axios from "axios";
 const allowedMimeTypes = new Set<string>([
   "application/pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -42,37 +42,45 @@ export type ParsedBidPage = {
 };
 export type ParsedBidFile = ParsedBidPage[];
 
-export const extractBidFileContent = async (file: Express.Multer.File, filePath: string): Promise<ParsedBidFile> => {
-  const extension = extname(file.originalname).toLowerCase();
-  const hasAllowedMimeType = allowedMimeTypes.has(file.mimetype);
-  const hasAllowedExtension = extension === ".pdf" || extension === ".docx";
+//export const extractBidFileContent = async (file: Express.Multer.File, filePath: string): Promise<ParsedBidFile> => {
+export const extractBidFileContent = async (filePath: string, extension: string): Promise<ParsedBidFile> => {
+  //const extension = extname(file.originalname).toLowerCase();
+  //const hasAllowedMimeType = allowedMimeTypes.has(file.mimetype);
+  //const hasAllowedExtension = extension === ".pdf" || extension === ".docx";
 
-  if (!hasAllowedMimeType && !hasAllowedExtension) {
-    throw new CustomError("Invalid file type. Only PDF or DOCX is allowed.", 400);
-  }
+  //if (!hasAllowedMimeType && !hasAllowedExtension) {
+  //  throw new CustomError("Invalid file type. Only PDF or DOCX is allowed.", 400);
+  //}
 
   let extractedPages: ParsedBidFile = [];
 
   try {
-    if (extension === ".pdf" || file.mimetype === "application/pdf") {
-     
-        const cleanFilePath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
-        const absolutePath = path.resolve(process.cwd(), cleanFilePath); 
+    if (extension === "pdf") {
+     const response = await axios.get(filePath, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(response.data);
 
-        if (!fs.existsSync(absolutePath)) {
-            throw new Error(`File does not exist on disk at: ${absolutePath}`);
-        }
+        //const cleanFilePath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+        //const absolutePath = path.resolve(process.cwd(), cleanFilePath); 
+
+        //if (!fs.existsSync(absolutePath)) {
+        //    throw new Error(`File does not exist on disk at: ${absolutePath}`);
+        //}
         
-        const htmlResult = await convertPdfToDynamicSimpleHtml(file.buffer);
+        const htmlResult = await convertPdfToDynamicSimpleHtml(buffer);
         
         extractedPages = [{ text: htmlResult}];
       
     } else if (
-      extension === ".docx" ||
-      file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      extension === "docx"
+      //file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
-
-        const zip = await JSZip.loadAsync(file.buffer);
+const response = await axios.get(filePath, {
+          responseType: "arraybuffer",
+        });
+        const buffer = Buffer.from(response.data);
+        const zip = await JSZip.loadAsync(buffer);
 
         let headerImageHtml = '';
         let usedHeaderImageName = ''; 
@@ -117,7 +125,7 @@ export const extractBidFileContent = async (file: Express.Multer.File, filePath:
         }
 
         const result = await mammoth.convertToHtml({ 
-            buffer: file.buffer 
+            buffer: buffer 
         }, {
             convertImage: mammoth.images.imgElement(async (image) => {
                 

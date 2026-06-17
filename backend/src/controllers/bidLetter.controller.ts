@@ -5,27 +5,27 @@ import { prisma } from "../lib/prisma.js";
 import { CustomError } from "../lib/custom-error.js";
 import fs from 'fs'; // Put this at the very top of your file
 import OpenAI from "openai";
-const client = new OpenAI();
+const client = new OpenAI(); 
 import { AuthenticatedRequest } from '../types/express.js';
 export const createBidLetter = async (req: Request, res: Response) => {
   try {
-    
-    const file = req.file
+    const { dealId, fileName, fileSize, extension, file } = req.body;
+    //const file = req.file
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" })
     }
-    const { dealId } = req.body;
+    
     // 1. Generate filename safely
-    const filename = `${Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '_').replace(/_+/g, '_')}`;
-    const relativeUploadPath = `./uploads/${filename}`;
+    //const filename = `${Date.now()}_${fileName.replace(/[^a-zA-Z0-9.\-_]/g, '_').replace(/_+/g, '_')}`;
+    //const relativeUploadPath = `./uploads/${filename}`;
 
     // 2. Ensure directory exists and write file SYNCHRONOUSLY to block until done
-    if (!fs.existsSync('./uploads')) {
-        fs.mkdirSync('./uploads', { recursive: true });
-    }
-    fs.writeFileSync(relativeUploadPath, file.buffer); 
+    //if (!fs.existsSync('./uploads')) {
+    //    fs.mkdirSync('./uploads', { recursive: true });
+    //}
+   // fs.writeFileSync(relativeUploadPath, file.buffer); 
 
-    const pages = await extractBidFileContent(file, `/uploads/${filename}`);
+    const pages = await extractBidFileContent(file, extension);
 
     const dealData = await prisma.deal.findUnique({
       where: { id: Number(req.body.dealId) },
