@@ -193,6 +193,29 @@ const handleLookupFileChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     }
 };
 
+const uploadToCloudinary = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "Savitest"); // from Cloudinary
+  formData.append("resource_type", "auto");
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dvlp9r6uu/auto/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  const data = await res.json();
+  return {
+    url: data.secure_url,
+    publicId: data.public_id,
+  };
+};
 
 const handleUploadRevisedTargetClick = () => {
     if (!selectedLookupId) {
@@ -224,13 +247,28 @@ const handleUploadRevisedTargetClick = () => {
         payload.append('fileType', originalRootRecord.type);       // Preserve core template vs draft category parameters
         payload.append('version', String(calculatedNextVersion));
 
+        const uploadResult = await uploadToCloudinary(freshSelectedFile);
+
+        const fileMeta = {
+            file: uploadResult.url,
+            dealId: String(originalRootRecord.dealId),
+            parentId: String(targetParentIdInt),
+            fileType: originalRootRecord.type,
+            version: String(calculatedNextVersion),
+            fileName: freshSelectedFile.name,
+            fileSize: freshSelectedFile.size,
+            extension: freshSelectedFile.name.split('.').pop(),
+        };
+
                     try {
-            const res = await apiClient.post(`/ndaAnalysis/upload`, payload, {
+            /*const res = await apiClient.post(`/ndaAnalysis/upload`, payload, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            });
-
+            });*/
+             const res = await apiClient.post('/ndaAnalysis/upload', {
+                ...fileMeta,
+            });           
             if (res.status !== 200 && res.status !== 201) throw new Error("Upload tracking process failed.");
             
             const newDatabaseRow: NdaAnalysisData = res.data;
