@@ -8,6 +8,7 @@ import { extractInfo } from "../services/openai.service.js";
 import { Prisma } from "../generated/prisma/client.js";
 //import path from "node:path";
 import { AuthenticatedRequest } from '../types/express.js';
+import { uploadToCloudinary } from "../utils/upload.js";
 
 export const createDeal = async (req: Request, res: Response) => {
   const { name } = req.body;
@@ -31,10 +32,11 @@ export const createDeal = async (req: Request, res: Response) => {
   };
 
   // save file to disk 
-  import('fs').then(fs => {
-    if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads');
-    fs.writeFileSync(`./uploads/${filename}`, file.buffer);
-  })
+  //import('fs').then(fs => {
+  //  if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads');
+  //  fs.writeFileSync(`./uploads/${filename}`, file.buffer);
+  //})
+const result: any = await uploadToCloudinary(file);
 
 const pages = await extractDealFileContent(file);
 const data = await extractInfo(pages)
@@ -247,7 +249,8 @@ const data = await extractInfo(pages)
         create: {
           contentType: file.mimetype,
           name: file.originalname,
-          url: `/uploads/${filename}`,
+          //url: `/uploads/${filename}`,
+          url:result.secure_url,
           userId: Number((req as AuthenticatedRequest).user!.id),
           size: file.size,
         }

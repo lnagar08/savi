@@ -64,44 +64,44 @@ export const extractDealFileContent = async (file: Express.Multer.File): Promise
     //} 
     
     if (extension === ".pdf" || file.mimetype === "application/pdf") {
-  const parsedPdf = await new Promise<any>((resolve, reject) => {
-    const pdfParser = new PDFParser();
- 
-    pdfParser.on("pdfParser_dataError", (errData: any) => {
-      reject(errData.parserError);
-    });
- 
-    pdfParser.on("pdfParser_dataReady", (pdfData: any) => {
-      resolve(pdfData);
-    });
- 
-    pdfParser.parseBuffer(file.buffer);
-  });
- 
-  extractedPages =
-  parsedPdf.Pages?.map((page: any, pageIndex: number) => {
-    const text = page.Texts?.map((textItem: any) => {
-      if (!textItem.R) return "";
+      const parsedPdf = await new Promise<any>((resolve, reject) => {
+        const pdfParser = new PDFParser();
+    
+        pdfParser.on("pdfParser_dataError", (errData: any) => {
+          reject(errData.parserError);
+        });
+    
+        pdfParser.on("pdfParser_dataReady", (pdfData: any) => {
+          resolve(pdfData);
+        });
+    
+        pdfParser.parseBuffer(file.buffer);
+      });
+    
+      extractedPages =
+      parsedPdf.Pages?.map((page: any, pageIndex: number) => {
+        const text = page.Texts?.map((textItem: any) => {
+          if (!textItem.R) return "";
 
-      return textItem.R
-        .map((r: any) => safeDecode(r.T || ""))
-        .join(" ");
-    }).join(" ") || "";
+          return textItem.R
+            .map((r: any) => safeDecode(r.T || ""))
+            .join(" ");
+        }).join(" ") || "";
 
-    return {
-      page: pageIndex + 1,
-      text: normalizeExtractedText(text),
-      images: [],
-    };
-  }) || [];
- 
-  if (extractedPages.length === 0) {
-    throw new CustomError(
-      "Unable to extract text from the uploaded PDF.",
-      422
-    );
-  }
-}else if (
+        return {
+          page: pageIndex + 1,
+          text: normalizeExtractedText(text),
+          images: [],
+        };
+      }) || [];
+    
+      if (extractedPages.length === 0) {
+        throw new CustomError(
+          "Unable to extract text from the uploaded PDF.",
+          422
+        );
+      }
+    }else if (
       extension === ".docx" ||
       file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
