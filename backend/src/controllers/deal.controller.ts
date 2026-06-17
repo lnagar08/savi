@@ -8,13 +8,20 @@ import { extractInfo } from "../services/openai.service.js";
 import { Prisma } from "../generated/prisma/client.js";
 //import path from "node:path";
 import { AuthenticatedRequest } from '../types/express.js';
-import { uploadToCloudinary } from "../utils/upload.js";
 
 export const createDeal = async (req: Request, res: Response) => {
-  const { name } = req.body;
-  const file = req.file;
+   const {
+    name,
+    fileUrl,
+    publicId,
+    fileName,
+    fileSize,
+    fileType,
+    extension,
+  } = req.body;
+  //const file = req.file;
   if (!name) throw new CustomError("Deal name is required", 400);
-  if (!file) throw new CustomError("Deal document is required", 400);
+  //if (!file) throw new CustomError("Deal document is required", 400);
 
   const toDate = (value?: string | null): Date | null => {
     if (!value) return null;
@@ -22,7 +29,7 @@ export const createDeal = async (req: Request, res: Response) => {
     return Number.isNaN(parsed.getTime()) ? null : parsed;
   };
 
-  const filename = `${Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '_').replace(/_+/g, '_')}`;
+  //const filename = `${Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '_').replace(/_+/g, '_')}`;
 
   const cleanNumber = (val: any): number | null => {
     if (!val || typeof val !== 'string') return null;
@@ -36,9 +43,8 @@ export const createDeal = async (req: Request, res: Response) => {
   //  if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads');
   //  fs.writeFileSync(`./uploads/${filename}`, file.buffer);
   //})
-const result: any = await uploadToCloudinary(file);
 
-const pages = await extractDealFileContent(file);
+const pages = await extractDealFileContent(fileUrl);
 const data = await extractInfo(pages)
 
 //const extractedFiles = await exportPdfPagesAsImages(`./uploads/${filename}`);
@@ -247,12 +253,11 @@ const data = await extractInfo(pages)
       },
       documents: {
         create: {
-          contentType: file.mimetype,
-          name: file.originalname,
-          //url: `/uploads/${filename}`,
-          url:result.secure_url,
+          contentType: extension,
+          name: fileName,
+          url: fileUrl,
           userId: Number((req as AuthenticatedRequest).user!.id),
-          size: file.size,
+          size: fileSize,
         }
       }
     },

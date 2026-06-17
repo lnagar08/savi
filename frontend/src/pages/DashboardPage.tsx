@@ -238,8 +238,31 @@ function DashboardPage() {
 
     setFilesList((prev) => prev.filter((_, index) => index !== fileIndex))
   }
+const uploadToCloudinary = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // from Cloudinary
 
-  const handleCreateDeal = async () => {
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dvlp9r6uu/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  const data = await res.json();
+
+  return {
+    url: data.secure_url,
+    publicId: data.public_id,
+  };
+};
+  /*const handleCreateDeal = async () => {
     if (isCreatingDeal) {
       return
     }
@@ -290,8 +313,56 @@ function DashboardPage() {
     } finally {
       setIsCreatingDeal(false)
     }
+  }*/
+const handleCreateDeal = async () => {
+  if (isCreatingDeal) return;
+
+  if (!dealName.trim()) {
+    setErrorMessage('Please enter a deal name');
+    setTimeout(() => setErrorMessage(''), 3000);
+    return;
   }
 
+  if (!uploadedFile) {
+    setErrorMessage('Please upload a file first');
+    setTimeout(() => setErrorMessage(''), 3000);
+    return;
+  }
+
+  setIsCreatingDeal(true);
+
+  try {
+    // 🔥 STEP 1: Upload to Cloudinary
+    const uploadResult = await uploadToCloudinary(uploadedFile);
+
+    // 🔥 STEP 2: Extract metadata
+    const fileMeta = {
+      fileName: uploadedFile.name,
+      fileSize: uploadedFile.size,
+      fileType: uploadedFile.type,
+      extension: uploadedFile.name.split('.').pop(),
+    };
+
+    // 🔥 STEP 3: Send to backend (NO FILE)
+    const res = await apiClient.post('/deals', {
+      name: dealName,
+      fileUrl: uploadResult.url,
+      publicId: uploadResult.publicId,
+      ...fileMeta,
+    });
+
+    if (res?.data?.data?.id) {
+      navigate(`/deal-analysis-details?dealId=${res.data.data.id}`);
+    }
+
+  } catch (error) {
+    console.error('Failed to create deal:', error);
+    setErrorMessage('Unable to create deal. Please try again.');
+    setTimeout(() => setErrorMessage(''), 3000);
+  } finally {
+    setIsCreatingDeal(false);
+  }
+};
   const handlePaginationModelChange = useCallback((model: GridPaginationModel) => {
     setApiOptions((prev) => ({
       ...prev,
