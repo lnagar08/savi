@@ -360,23 +360,32 @@ function DealAnalysisDetailsPage() {
   const [searchParams] = useSearchParams()
   const dealId = searchParams.get('dealId')!;
 
-  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-  
-  const [editData, setEditData] = useState({id: 0 });
+const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+const [editData, setEditData] = useState({ id: 0 });
 
-  const openEditModal = (id: number) => {
-    setModalMode('edit');
-    setEditData({
-      id: id
-    });
-    
-    const { bootstrap } = window as any; 
-    const modalElement = document.getElementById('myModal3');
-    if (modalElement && bootstrap) {
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();
+const openEditModal = (id: number) => {
+  setModalMode('edit');
+  setEditData({ id: id });
+  
+  const globalWindow = window as any;
+  const bootstrap = globalWindow.bootstrap; 
+  const modalElement = document.getElementById('myModal3');
+  
+  if (!bootstrap) {
+    console.error("Bootstrap library fails to load on Production!");
+    return;
+  }
+
+  if (modalElement) {
+    let modal = bootstrap.Modal.getInstance(modalElement);
+    if (!modal) {
+      modal = new bootstrap.Modal(modalElement);
     }
-  };
+    modal.show();
+  }
+};
+
+
 
   const handleDeleteBid = async (bidId: number) => {
   if (window.confirm("Are you sure you want to remove this bid letter?")) {
