@@ -14,7 +14,8 @@ const upload = multer({
 
 dealRouter.get("/", authMiddleware, getDeals);
 dealRouter.get("/:id", authMiddleware, getDealById);
-dealRouter.post("/", authMiddleware, upload.single("file"), createDeal);
+//dealRouter.post("/", authMiddleware, upload.single("file"), createDeal);
+dealRouter.post("/", authMiddleware, createDeal);
 dealRouter.post("/parse", authMiddleware, upload.single("file"), parseDeal);
 dealRouter.put("/inputs/:dealId", authMiddleware, updateInputs);
 
