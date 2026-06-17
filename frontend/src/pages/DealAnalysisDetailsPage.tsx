@@ -22,7 +22,7 @@ import apiClient from '../services/api'
 
 import { calculateLease } from '../utils/leaseMath';
 import InputDealModal from '../components/deal-analysis/InputDealModal'
-import fetchMarketCurves from '../utils/marketCurves';
+//import fetchMarketCurves from '../utils/marketCurves';
 import { includeCurrency } from '../utils/formatters';
 import { PriceSensitivityChart } from '../utils/ZSpreadSensitivityChart';
 import { AmortisationChart } from '../utils/AmortisationChart';
@@ -76,12 +76,12 @@ type DealData = {
     }
   }>
 }
-interface MarketData {
+/*interface MarketData {
   soniaRate: any;
   giltYield: any;
   inflationRate: any;
   lastUpdated: string | null;
-}
+}*/
 type TraceabilityLookup = Record<string, string>
 
 
@@ -419,7 +419,7 @@ function DealAnalysisDetailsPage() {
   const [draftValue, setDraftValue] = useState('')
   const [editedValues, setEditedValues] = useState<Record<string, string>>({})
   const [inputs, setInputs] = useState<LeaseInputs | null>(null);
-  const [curves, setCurves] = useState<MarketData | undefined>(undefined);
+  const [curves, setCurves] = useState();
   
   const startEdit = (fieldPath: string, initialValue: string) => {
     setEditingFieldPath(fieldPath)
@@ -451,7 +451,7 @@ function DealAnalysisDetailsPage() {
     console.log('Edited values as object:', editedValuesObject)
   }, [editedValues])
   
-
+/*
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -464,7 +464,7 @@ function DealAnalysisDetailsPage() {
     };
 
     loadData();
-  }, []);
+  }, []);*/
 
   const dealName = deal?.name || deal?.deal_identification?.deal_name || 'Project Aurora A'
   const dealLocation = deal?.location || deal?.deal_identification?.location || 'New York, NY'
