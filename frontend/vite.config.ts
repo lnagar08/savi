@@ -12,7 +12,7 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api-fred/, ''),
       },
-      '/backend': 'https://savi-three-sigma.vercel.app/', 
+      '/api': 'https://savi-three-sigma.vercel.app/', 
     },
   },
   optimizeDeps: {
