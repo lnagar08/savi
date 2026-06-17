@@ -29,7 +29,7 @@ export const generateDealReport = async (req: Request, res: Response) => {
     }
     fs.writeFileSync(relativeUploadPath, file.buffer); 
 
-    const pages = await extractBidFileContent(file, `/uploads/${filename}`);
+    /*const pages = await extractBidFileContent(file, `/uploads/${filename}`);
     
     await prisma.dealReport.create({
         data: {
@@ -43,7 +43,7 @@ export const generateDealReport = async (req: Request, res: Response) => {
       success: true,
       message: "Deal Report generated successfully",
       data: pages[0]?.text,
-    });
+    });*/
   } catch (error) {
     res.status(500).json({ message: "Internal server error" })
   }
