@@ -583,3 +583,35 @@ export const updateInputs = async (req: Request, res: Response) => {
     });
   }
 }
+
+export const removeDeal = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const dealIdNum = Number(id);
+
+    if (isNaN(dealIdNum)) {
+      return res.status(400).json({ success: false, message: "Invalid Deal ID" });
+    }
+
+    const deletedDeal = await prisma.deal.delete({
+      where: { id: dealIdNum }
+    });
+
+    return res.status(200).json({ 
+      success: true, 
+      message: "Deal deleted successfully",
+      data: deletedDeal 
+    });
+
+  } catch (error: any) {
+    console.error("Delete Deal Error:", error);
+
+    if (error.code === 'P2025') {
+      return res.status(404).json({ success: false, message: "Deal not found" });
+    }
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error occurred while deleting the deal" 
+    });
+  }
+};

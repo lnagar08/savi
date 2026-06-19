@@ -15,7 +15,7 @@ import tdeye from '../assets/images/tdeye.svg'
 import tddelete from '../assets/images/tddelete.svg'
 import uploadLinear from '../assets/images/upload-linear.svg'
 import AiAssistantModal from '../components/dashboard/AiAssistantModal'
-import { useDealsQuery } from '../hooks/deals'
+import { useDealsQuery, useDeleteDealMutation } from '../hooks/deals'
 import { useTheme } from '../hooks/useTheme'
 import apiClient from '../services/api'
 import type { GetDealsOptions } from '../services/deals'
@@ -47,6 +47,11 @@ function DashboardPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const [dealName, setDealName] = useState('')
   const [isCreatingDeal, setIsCreatingDeal] = useState(false)
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedDealId, setSelectedDealId] = useState<number | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+
   const [apiOptions, setApiOptions] = useState<GetDealsOptions>({
     page: 1,
     limit: 10,
@@ -101,6 +106,8 @@ function DashboardPage() {
     isFetching: isDealsFetching,
   } = useDealsQuery(apiOptions)
 
+  const { mutate: executeDelete } = useDeleteDealMutation()
+
   const dealRows: Record<string, any>[] = dealsData?.data ?? []
   const totalDeals = dealsData?.pagination?.total ?? 0
 
@@ -121,6 +128,27 @@ function DashboardPage() {
 
     return () => window.clearTimeout(timeoutId)
   }, [searchInput])
+
+  const handleOpenDeleteModal = (id: number, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setSelectedDealId(id)
+    setDeleteError(null) 
+    setIsModalOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (selectedDealId === null) return
+    executeDelete(selectedDealId, {
+      onSuccess: () => {
+        setIsModalOpen(false)
+        setSelectedDealId(null)
+      },
+      onError: (error: any) => {
+        setDeleteError(error?.response?.data?.message || error.message)
+      }
+    })
+  }
 
   const dataGridSx = useMemo(
     () => ({
@@ -493,7 +521,12 @@ const handleCreateDeal = async () => {
           >
             <img src={tdeye} alt="View" style={{ width: '22px', height: '22px', minWidth: '22px', minHeight: '22px', display: 'block', filter: isDarkTheme ? 'invert(1)' : undefined }} />
           </a>
-          <a href="#" onClick={(e) => e.preventDefault()}>
+          <a href="#" 
+            onClick={(e) => {
+              if (params.row?.id) {
+                handleOpenDeleteModal(Number(params.row.id), e)
+              }
+            }}>
             <img src={tddelete} alt="Delete" style={{ width: '22px', height: '22px', minWidth: '22px', minHeight: '22px', display: 'block' }} />
           </a>
         </div>
@@ -670,7 +703,64 @@ const handleCreateDeal = async () => {
           </div>
         </div>
       </div>
+      
+      {isModalOpen && (
+      <div style={{
+        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex',
+        alignItems: 'center', justifyContent: 'center', zIndex: 9999
+      }}>
+        <div style={{
+          backgroundColor: isDarkTheme ? '#1e1e1e' : '#ffffff',
+          color: isDarkTheme ? '#ffffff' : '#333333',
+          padding: '24px', borderRadius: '8px', width: '100%', maxWidth: '440px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)', textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '40px', marginBottom: '12px' }}>⚠️</div>
+          
+          <h3 style={{ margin: '0 0 12px 0', fontSize: '20px', fontWeight: 600 }}>
+            Delete Deal?
+          </h3>
+          
+          <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: '#666666', lineHeight: '1.5' }}>
+            Are you sure you want to delete this deal? This action <strong>cannot be undone</strong>. 
+            All related analysis and documents linked to this deal will be permanently deleted.
+          </p>
 
+          {deleteError && (
+            <div style={{
+              backgroundColor: '#ffebe9', color: '#ff1a1a', padding: '10px',
+              borderRadius: '4px', fontSize: '13px', marginBottom: '16px', textAlign: 'left'
+            }}>
+              <strong>Error:</strong> {deleteError}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              style={{
+                padding: '10px 20px', borderRadius: '6px', border: '1px solid #ccc',
+                backgroundColor: 'transparent', cursor: 'pointer', fontSize: '14px',
+                color: isDarkTheme ? '#ffffff' : '#333333'
+              }}
+            >
+              No, Cancel
+            </button>
+            <button
+              onClick={handleConfirmDelete}
+              style={{
+                padding: '10px 20px', borderRadius: '6px', border: 'none',
+                backgroundColor: '#d32f2f', color: '#ffffff', cursor: 'pointer',
+                fontSize: '14px', fontWeight: '500'
+              }}
+            >
+              Yes, Delete Permanently
+            </button>
+          </div>
+        </div>
+      </div>
+    )}          
       <AiAssistantModal />
  
       <div className="modal fade createdeal-modal" id="myModal" tabIndex={-1} aria-labelledby="createDealModalLabel" aria-hidden="true">

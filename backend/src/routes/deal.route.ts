@@ -1,6 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
-import { createDeal, parseDeal, getDeals, getDealById, updateInputs } from "../controllers/deal.controller.js";
+import { createDeal, parseDeal, getDeals, getDealById, updateInputs, removeDeal } from "../controllers/deal.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const dealRouter = Router();
@@ -16,6 +16,7 @@ dealRouter.get("/", authMiddleware, getDeals);
 dealRouter.get("/:id", authMiddleware, getDealById);
 //dealRouter.post("/", authMiddleware, upload.single("file"), createDeal);
 dealRouter.post("/", authMiddleware, createDeal);
+dealRouter.delete("/:id", authMiddleware, removeDeal);
 dealRouter.post("/parse", authMiddleware, upload.single("file"), parseDeal);
 dealRouter.put("/inputs/:dealId", authMiddleware, updateInputs);
 

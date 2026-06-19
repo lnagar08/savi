@@ -336,7 +336,7 @@ model Document {
   size        Int
   user        User   @relation(fields: [userId], references: [id])
   dealId      Int    @map("deal_id")
-  deal        Deal   @relation(fields: [dealId], references: [id])
+  deal        Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -359,7 +359,7 @@ model PasswordResetToken {
 model BidLetter {
   id            Int      @id @default(autoincrement())
   dealId        Int
-  deal          Deal     @relation(fields: [dealId], references: [id])
+  deal          Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
   projectName   String?
   purchasePrice Float?
   createdAt     DateTime @default(now())
@@ -369,7 +369,7 @@ model BidLetter {
 model BidLetterUpdated {
   id            Int      @id @default(autoincrement())
   dealId        Int
-  deal          Deal     @relation(fields: [dealId], references: [id])
+  deal          Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
   projectName   String?
   purchasePrice Float?
   createdAt     DateTime @default(now())
@@ -379,7 +379,7 @@ model BidLetterUpdated {
 model DealReport {
   id            Int      @id @default(autoincrement())
   dealId        Int
-  deal          Deal     @relation(fields: [dealId], references: [id])
+  deal          Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
   fileName      String?
   fileUrl       String?
   reportContent String?  @db.Text
@@ -389,7 +389,7 @@ model DealReport {
 model NdaAnalysis {
   id            Int      @id @default(autoincrement())
   dealId        Int
-  deal          Deal     @relation(fields: [dealId], references: [id])
+  deal          Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
   parentId      Int?     @map("parent_id") // For versioning, null for original, points to original for revisions
   fileName      String?
   fileUrl       String?

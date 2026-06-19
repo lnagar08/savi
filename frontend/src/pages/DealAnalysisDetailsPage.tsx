@@ -420,7 +420,8 @@ function DealAnalysisDetailsPage() {
   const [editedValues, setEditedValues] = useState<Record<string, string>>({})
   const [inputs, setInputs] = useState<LeaseInputs | null>(null);
   const [curves, setCurves] = useState();
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const startEdit = (fieldPath: string, initialValue: string) => {
     setEditingFieldPath(fieldPath)
     setDraftValue(initialValue === '--' ? '' : initialValue)
@@ -697,7 +698,9 @@ const sensitivityChart = results.sensitivityChartData;
             <div className="col-md-8">
               <div className="extraction-review-right">
                 <div className="btn-group">
-                  <button type="button" className="btn btn-info lightbtn" data-bs-toggle="modal" data-bs-target="#inputModal">
+                  <button type="button" className="btn btn-info lightbtn" 
+                  onClick={() => setIsModalOpen(true)}
+                  >
                     Edit
                   </button>
                   <button type="button" className="btn btn-info lightbtn" data-bs-toggle="modal" data-bs-target="#myModal">
@@ -951,14 +954,15 @@ const sensitivityChart = results.sensitivityChartData;
         </div>
 
       </main >
-      {inputs && curves && (
-      <InputDealModal
-        inputs={inputs}
-        setInputs={setInputs}
-        curve={curve}
-        setCurves={setCurves}
-        dealId={dealId}
-      />
+      {isModalOpen && (
+        <InputDealModal
+          inputs={inputs}
+          setInputs={setInputs}
+          setCurves={setCurves}
+          curve={curve}
+          dealId={dealId}
+          onClose={() => setIsModalOpen(false)} 
+        />
       )}
       {/*<NdaAnalysisModal dealId={dealId} />*/}
       <NdaAnalysisModalData dealId={dealId} />

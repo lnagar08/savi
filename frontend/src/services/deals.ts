@@ -32,3 +32,8 @@ export const getDeals = async (options: GetDealsOptions): Promise<GetDealsRespon
   })
   return response.data;
 }
+
+export const deleteDeal = async (id: number): Promise<{ success: boolean; message?: string }> => {
+  const response = await apiClient.delete(`/deals/${id}`)
+  return response.data;
+}
