@@ -1,3 +1,4 @@
+import { Modal } from 'bootstrap'; 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DataGrid,
@@ -86,9 +87,10 @@ function DashboardPage() {
         
         handleHidden();
 
-        const bootstrapModal = new (window as any).bootstrap.Modal(modalElement);
+        //const bootstrapModal = new (window as any).bootstrap.Modal(modalElement);
+        //bootstrapModal.show();
+        const bootstrapModal = new Modal(modalElement);
         bootstrapModal.show();
-
         navigate(location.pathname, { replace: true, state: {} });
       }
     }
