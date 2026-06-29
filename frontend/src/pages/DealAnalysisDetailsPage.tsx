@@ -103,14 +103,14 @@ const formatPrimitive = (value: unknown) => {
   return String(value)
 }
 
-const getTraceabilityTitle = (fieldPath: string, traceabilityLookup: TraceabilityLookup) => {
+/*const getTraceabilityTitle = (fieldPath: string, traceabilityLookup: TraceabilityLookup) => {
   const direct = traceabilityLookup[fieldPath]
   if (direct) {
     return direct
   }
 
   return 'AI generated'
-}
+}*/
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -286,7 +286,7 @@ const renderValue = (
     return renderFieldContent(value, fieldPath, traceabilityLookup, editHandlers)
   }
 
-  const traceabilityTitle = getTraceabilityTitle(fieldPath, traceabilityLookup)
+  //const traceabilityTitle = getTraceabilityTitle(fieldPath, traceabilityLookup)
   const displayValue = editHandlers.editedValues[fieldPath] ?? formatPrimitive(value)
   const isEditing = editHandlers.editingFieldPath === fieldPath
   const isNumericField = typeof value === 'number'
@@ -334,6 +334,7 @@ const renderValue = (
   return (
     <>
       <span>{displayValue}</span>
+      {/*}
       <div>
         <input className="form-check-input" type="checkbox" name="remember" />
         <i className="la la-question" data-bs-toggle="tooltip" data-bs-placement="top" title={traceabilityTitle}></i>
@@ -345,6 +346,7 @@ const renderValue = (
           <i className="la la-pencil"></i>
         </button>
       </div>
+      {*/}
     </>
   )
 }
@@ -516,7 +518,7 @@ function DealAnalysisDetailsPage() {
     }
    
   }, [starting_rent, startDate, expiryDate, financialInformation, curves, deal, cap, collar, spread, pricingDate]); 
-  const soniaCurve = 0.0374;
+  const soniaCurve = 0.0384;
   const inflationCurve = 0.031;
   const giltCurve = 0.042;
   const curve = useMemo(() => ({

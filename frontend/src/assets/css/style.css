@@ -796,11 +796,6 @@ a {
 .mb-30 {
     margin-bottom: 30px;
 }
-
-.formdesign .form-group.big {
-    /*  margin-bottom: 0px;*/
-}
-
 .create-deal .form-group.extraction-review-btn {
     margin: 0px;
 }
@@ -810,24 +805,8 @@ a {
     font-size: 18px;
 }
 
-.formdesign .form-group.big label {
-    /*font-size: 16px;
-    margin-bottom: 8px;
-    color: #000;
-    font-weight: 500;*/
-}
-
 .formdesign .form-group.big .input-group {
     gap: 0px 20px;
-}
-
-.formdesign .form-group.big .form-control {
-    /*background: #fff;
-    padding: 18px 30px;
-    border-radius: 10px !important;
-    border: 1px solid #cedcef;
-    outline: none !important;
-    box-shadow: none !important;*/
 }
 
 .createdeal-modal .modal-dialog {
@@ -1670,6 +1649,7 @@ body.signbg {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .btngroup li {
@@ -2061,10 +2041,6 @@ body.signbg {
 
 .tabledesign.issues-table .table tbody tr td {
     font-size: 13px;
-}
-
-.ndamodal .drag-file-area {
-    /*padding: 20px 20px;*/
 }
 
 .createdeal-modal.ndamodal .modal-dialog {

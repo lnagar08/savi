@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { signIn } from '../services/api'
 import { signInSchema, type SignInInput } from '../schemas/auth.schema'
 import logo from '../assets/images/logo.png'
-import google from '../assets/images/google.svg'
-import outlook from '../assets/images/outlook.svg'
-import microsoft from '../assets/images/microsoft.svg'
+//import google from '../assets/images/google.svg'
+//import outlook from '../assets/images/outlook.svg'
+//import microsoft from '../assets/images/microsoft.svg'
 import sso from '../assets/images/sso.svg'
 import { useUser } from '../contexts/UserContext'
 
@@ -157,24 +157,6 @@ function SignInPage() {
                     <span>or continue with</span>
                   </div>
                   <ul className="btngroup">
-                    <li>
-                      <button type="button" className="btn btn-google">
-                        <img src={google} className="img-fluid" alt="" />
-                        Sign in with Google
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" className="btn btn-outlook">
-                        <img src={outlook} className="img-fluid" alt="" />
-                        Sign in with Outlook
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" className="btn btn-office">
-                        <img src={microsoft} className="img-fluid" alt="" />
-                        Sign in with Office 365
-                      </button>
-                    </li>
                     <li>
                       <button type="button" className="btn btn-sso">
                         <img src={sso} className="img-fluid" alt="" />

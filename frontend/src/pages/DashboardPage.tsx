@@ -887,9 +887,6 @@ const handleCreateDeal = async () => {
                           <td>{displayName}</td>
                           <td className="tdaction">
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', whiteSpace: 'nowrap' }}>
-                              <a href="#" onClick={(e) => e.preventDefault()}>
-                                <img src={tdeye} className="img-fluid" alt="View" style={{ width: '18px', height: '18px' }} />
-                              </a>
                               <a href="#" onClick={(e) => {
                                 e.preventDefault()
                                 handleDeleteFile(index)

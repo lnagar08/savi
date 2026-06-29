@@ -2,13 +2,13 @@
 import { useQuery } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { Fragment, useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import analysisicon1 from '../assets/images/analysisicon1.png'
 import analysisicon2 from '../assets/images/analysisicon2.png'
 import analysisicon3 from '../assets/images/analysisicon3.png'
 import analysisicon4 from '../assets/images/analysisicon4.png'
 import tdeye from '../assets/images/tdeye.svg'
-import tddelete from '../assets/images/tddelete.svg'
+//import tddelete from '../assets/images/tddelete.svg'
 import filter from '../assets/images/filter.svg'
 import property from '../assets/images/property.jpg'
 import siteVisual from '../assets/images/sitevisual.jpg'
@@ -86,14 +86,14 @@ const formatPrimitive = (value: unknown) => {
   return String(value)
 }
 
-const getTraceabilityTitle = (fieldPath: string, traceabilityLookup: TraceabilityLookup) => {
+/*const getTraceabilityTitle = (fieldPath: string, traceabilityLookup: TraceabilityLookup) => {
   const direct = traceabilityLookup[fieldPath]
   if (direct) {
     return direct
   }
 
   return 'AI generated'
-}
+}*/
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -269,7 +269,7 @@ const renderValue = (
     return renderFieldContent(value, fieldPath, traceabilityLookup, editHandlers)
   }
 
-  const traceabilityTitle = getTraceabilityTitle(fieldPath, traceabilityLookup)
+  //const traceabilityTitle = getTraceabilityTitle(fieldPath, traceabilityLookup)
   const displayValue = editHandlers.editedValues[fieldPath] ?? formatPrimitive(value)
   const isEditing = editHandlers.editingFieldPath === fieldPath
   const isNumericField = typeof value === 'number'
@@ -317,6 +317,7 @@ const renderValue = (
   return (
     <>
       <span>{displayValue}</span>
+      {/*}
       <div>
         <input className="form-check-input" type="checkbox" name="remember" />
         <i className="la la-question" data-bs-toggle="tooltip" data-bs-placement="top" title={traceabilityTitle}></i>
@@ -328,11 +329,18 @@ const renderValue = (
           <i className="la la-pencil"></i>
         </button>
       </div>
+      {*/}
     </>
   )
 }
 
 function DealAnalysisPage() {
+  const navigate = useNavigate();
+
+  const handleUploadClick = () => {
+    navigate('/dashboard', { state: { openModal: true } });
+  };
+
   const [searchParams] = useSearchParams()
   const dealId = searchParams.get('dealId')
   const {
@@ -491,15 +499,11 @@ function DealAnalysisPage() {
             <div className="col-md-8">
               <div className="extraction-review-right">
                 <div className="btn-group">
-                  <button type="button" className="btn btn-info lightbtn" data-bs-toggle="modal" data-bs-target="#myModal">
-                    NDA Analysis
-                  </button>
-                  <button type="button" className="btn btn-info lightbtn" data-bs-toggle="modal" data-bs-target="#myModal2">
+                 
+                  <button type="button" className="btn btn-info lightbtn" onClick={handleUploadClick}>
                     Upload New Document
                   </button>
-                  <button type="button" className="btn btn-info lightbtn" data-bs-toggle="modal" data-bs-target="#myModal3">
-                    Create Bid Letter
-                  </button>
+                 
                   <button type="button" className="btn btn-info lightbtn">Run Analysis</button>
                   <button type="button" className="btn btn-info">Generate Report</button>
                 </div>
@@ -645,7 +649,7 @@ function DealAnalysisPage() {
                   <div className="tabledesign filterno whitebg">
                     <div className="documents-new">
                       <h5 className="shot-heading">Documents</h5>
-                      <a href="#" className="btn btn-info">Upload New Document</a>
+                      <button className="btn btn-info" onClick={handleUploadClick}>Upload New Document</button>
                     </div>
                     <div className="table-responsive">
                       <table className="table dt-responsive categories_table">
@@ -664,10 +668,10 @@ function DealAnalysisPage() {
                               <td>{new Date(doc.createdAt).toLocaleString('en-IN')}</td>
                               <td>{doc.user.name}</td>
                               <td className="tdaction">
-                                <a href={`${apiClient.defaults.baseURL}${doc.url}`} target="_blank" rel="noopener noreferrer">
+                                <a href={`${doc.url}`} target="_blank" rel="noopener noreferrer">
                                   <img src={tdeye} className="img-fluid" alt="" />
                                 </a>
-                                <a href="#"><img src={tddelete} className="img-fluid" alt="" /></a>
+                                
                               </td>
                             </tr>
                           ))}
