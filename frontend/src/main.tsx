@@ -11,6 +11,7 @@ import './assets/js/bootstrap.bundle.min.js'
 import './index.css'
 import App from './App.tsx'
 import { UserProvider } from './contexts/UserContext'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const queryClient = new QueryClient({
   defaultOptions: {
