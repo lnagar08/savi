@@ -620,7 +620,7 @@ export function computeSensitivity(inputs: ModelInputs, basePeriods: PeriodRow[]
 export function computeAmortisation(periods: PeriodRow[], grossPrice: number): AmortisationRow[] {
   const rows: AmortisationRow[] = [];
   let openingBalance = grossPrice;
-  let prevDF = 1;
+  //let prevDF = 1;
 
   periods.forEach((p, i) => {
     const discountFactor = p.discountFactor;
@@ -647,7 +647,7 @@ export function computeAmortisation(periods: PeriodRow[], grossPrice: number): A
     });
 
     openingBalance = closingBalance;
-    prevDF = discountFactor;
+    //prevDF = discountFactor;
   });
 
   return rows;
