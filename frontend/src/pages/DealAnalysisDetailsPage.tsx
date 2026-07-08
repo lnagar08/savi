@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 //import type { LeaseInputs } from '../types/lease';
 import type { ReactNode } from 'react'
 import { Fragment, useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import analysisicon1 from '../assets/images/analysisicon1.png'
 import analysisicon2 from '../assets/images/analysisicon2.png'
 import analysisicon3 from '../assets/images/analysisicon3.png'
@@ -363,11 +363,11 @@ const renderValue = (
 }
 
 function DealAnalysisDetailsPage() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
-  const handleUploadClick = () => {
-    navigate('/dashboard', { state: { openModal: true } });
-  };
+  //const handleUploadClick = () => {
+  //  navigate('/dashboard', { state: { openModal: true } });
+  //};
 
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams()
