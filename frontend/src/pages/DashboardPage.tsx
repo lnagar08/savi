@@ -23,6 +23,7 @@ import type { GetDealsOptions } from '../services/deals'
 import { useUser } from '../contexts/UserContext'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { formatDealValue, formatTimeAgo } from '../lib/format'
+import axios from 'axios'
 
 const DEAL_SORT_FIELD_MAP: Record<string, string> = {
   ref: 'ref',
@@ -268,29 +269,50 @@ function DashboardPage() {
 
     setFilesList((prev) => prev.filter((_, index) => index !== fileIndex))
   }
-const uploadToCloudinary = async (file: File) => {
+
+interface CloudinaryUploadResponse {
+  url: string;
+  publicId: string;
+}
+
+interface CloudinaryUploadResponse {
+  url: string;
+  publicId: string;
+}
+
+const uploadToCloudinary = async (
+  file: File, 
+  onProgress: (progressEvent: any) => void
+): Promise<CloudinaryUploadResponse> => {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "Savitest"); // from Cloudinary
+  formData.append("upload_preset", "Savitest"); 
   formData.append("resource_type", "auto");
-  const res = await fetch(
-    "https://api.cloudinary.com/v1_1/dvlp9r6uu/auto/upload",
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
 
-  if (!res.ok) {
+  try {
+   
+    const res = await axios.post(
+      "https://api.cloudinary.com/v1_1/dvlp9r6uu/auto/upload", 
+      formData,
+      { 
+        onUploadProgress: onProgress 
+      }
+    );
+
+   
+    return {
+      url: res.data.secure_url,
+      publicId: res.data.public_id,
+    };
+  } catch (error) {
+    console.error("Cloudinary upload error details:", error);
     throw new Error("Cloudinary upload failed");
   }
-
-  const data = await res.json();
-  return {
-    url: data.secure_url,
-    publicId: data.public_id,
-  };
 };
+
+
+
+
   /*const handleCreateDeal = async () => {
     if (isCreatingDeal) {
       return
@@ -343,6 +365,8 @@ const uploadToCloudinary = async (file: File) => {
       setIsCreatingDeal(false)
     }
   }*/
+const modalRef = useRef<HTMLDivElement>(null);
+const [uploadProgress, setUploadProgress] = useState(0);
 const handleCreateDeal = async () => {
   if (isCreatingDeal) return;
 
@@ -359,12 +383,33 @@ const handleCreateDeal = async () => {
   }
 
   setIsCreatingDeal(true);
+  setUploadProgress(1); 
+
+  let fakeProgressInterval: number | null = null;
 
   try {
-    // 🔥 STEP 1: Upload to Cloudinary
-    const uploadResult = await uploadToCloudinary(uploadedFile);
+    const uploadResult = await uploadToCloudinary(uploadedFile, (progressEvent) => {
+      const totalBytes = progressEvent.total ?? progressEvent.loaded;
+      const percentCompleted = Math.round((progressEvent.loaded * 100) / totalBytes);
+      
+      const cloudinaryScale = Math.round(percentCompleted * 0.20);
+      setUploadProgress(cloudinaryScale < 1 ? 1 : cloudinaryScale);
+    });
 
-    // 🔥 STEP 2: Extract metadata
+    let currentProgress = 20;
+    setUploadProgress(currentProgress);
+
+    fakeProgressInterval = window.setInterval(() => {
+  if (currentProgress < 98) {
+    if (currentProgress < 85) {
+      currentProgress += 2; 
+    } else {
+      currentProgress += 0.5;
+    }
+    setUploadProgress(Math.min(currentProgress, 98));
+  }
+}, 800);
+
     const fileMeta = {
       fileName: uploadedFile.name,
       fileSize: uploadedFile.size,
@@ -372,7 +417,7 @@ const handleCreateDeal = async () => {
       extension: uploadedFile.name.split('.').pop(),
     };
 
-    // 🔥 STEP 3: Send to backend (NO FILE)
+
     const res = await apiClient.post('/deals', {
       name: dealName,
       fileUrl: uploadResult.url,
@@ -380,18 +425,36 @@ const handleCreateDeal = async () => {
       ...fileMeta,
     });
 
+    if (fakeProgressInterval) clearInterval(fakeProgressInterval);
+
     if (res?.data?.data?.id) {
-      navigate(`/deal-analysis-details?dealId=${res.data.data.id}`);
+      setUploadProgress(100); 
+
+      // 🛠️ Bootstrap Modal Close
+      const modalElement = modalRef.current;
+      if (modalElement) {
+        const modalInstance = Modal.getInstance(modalElement) || new Modal(modalElement);
+        modalInstance.hide();
+
+        modalElement.addEventListener('hidden.bs.modal', () => {
+          navigate(`/deal-analysis-details?dealId=${res.data.data.id}`);
+        }, { once: true });
+      } else {
+        navigate(`/deal-analysis-details?dealId=${res.data.data.id}`);
+      }
     }
 
   } catch (error) {
+    if (fakeProgressInterval) clearInterval(fakeProgressInterval);
     console.error('Failed to create deal:', error);
     setErrorMessage('Unable to create deal. Please try again.');
     setTimeout(() => setErrorMessage(''), 3000);
+    setUploadProgress(0);
   } finally {
     setIsCreatingDeal(false);
   }
 };
+
   const handlePaginationModelChange = useCallback((model: GridPaginationModel) => {
     setApiOptions((prev) => ({
       ...prev,
@@ -434,7 +497,7 @@ const handleCreateDeal = async () => {
           onClick={(e) => {
             e.preventDefault()
             if (params.row?.id) {
-              navigate(`/deal-analysis?dealId=${params.row.id}`)
+              navigate(`/deal-analysis-details?dealId=${params.row.id}`)
             }
           }}
         >
@@ -551,12 +614,12 @@ const handleCreateDeal = async () => {
             </div>
             <div className="col-md-6">
               <div className="titleright-btn">
-                <a href="#" className="btn btn-info exbtn" onClick={(e) => e.preventDefault()}>
+                {/*<a href="#" className="btn btn-info exbtn" onClick={(e) => e.preventDefault()}>
                   Upload NDA
                 </a>
                 <a href="#" className="btn btn-info exbtn" onClick={(e) => e.preventDefault()}>
                   Generate Report
-                </a>
+                </a>*/}
                 <button type="button" className="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal">
                   <i className="la la-plus"></i>Create Deal
                 </button>
@@ -765,8 +828,15 @@ const handleCreateDeal = async () => {
     )}          
       <AiAssistantModal />
  
-      <div className="modal fade createdeal-modal" id="myModal" tabIndex={-1} aria-labelledby="createDealModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+      <div 
+        className="modal fade createdeal-modal" 
+        id="myModal" 
+        tabIndex={-1} 
+        aria-labelledby="createDealModalLabel" 
+        aria-hidden="true"
+        ref={modalRef} // 1. Added Ref anchor for native instance control
+      >
+    <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
               <h4 className="modal-title" id="createDealModalLabel">Create Deal</h4>
@@ -775,24 +845,25 @@ const handleCreateDeal = async () => {
 
             <div className="modal-body">
               <div className="formdesign">
-                <form id="createDealForm" onSubmit={(e) => e.preventDefault()}>
-                  <div className="form-group big">
-                    <label>Deal Name</label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter deal name"
-                        value={dealName}
-                        onChange={(e) => {
-                          setDealName(e.target.value)
-                          if (e.target.value.trim()) {
-                            setErrorMessage('')
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
+          <form id="createDealForm" onSubmit={(e) => e.preventDefault()}>
+            <div className="form-group big">
+              <label>Deal Name</label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter deal name"
+                  value={dealName}
+                  disabled={isCreatingDeal}
+                  onChange={(e) => {
+                    setDealName(e.target.value);
+                    if (e.target.value.trim()) {
+                      setErrorMessage('');
+                    }
+                  }}
+                />
+              </div>
+            </div>
 
                   <div className="form-group big">
                     <label className="form-label">Upload Documents</label>
@@ -905,23 +976,51 @@ const handleCreateDeal = async () => {
               </div>
             </div>
 
-            <div className="modal-footer">
-              {isCreatingDeal && (
-                <div className="alert alert-info text-center py-2 mb-2 small" role="alert">
-                  Please wait while the deal is being created. This may take up to 2 minutes.
-                </div>
-              )}
-              <button type="button" className="btn btn-info" onClick={handleCreateDeal} disabled={isCreatingDeal}>
-                {isCreatingDeal ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Creating...
-                  </>
-                ) : (
-                  'Create Deal'
-                )}
-              </button>
+            <div className="modal-footer d-block"> {/* Changed layout behavior to block stack feedback items */}
+        {/* 2. Added Real-time Native Bootstrap Progress UI to minimize perceived delays */}
+        {isCreatingDeal && uploadProgress > 0 && (
+          <div className="w-100 mb-3">
+            <div className="d-flex justify-content-between small text-muted mb-1">
+              {}
+              <span>
+                {uploadProgress <= 20 
+                  ? `Uploading file to storage...` 
+                  : `AI is extracting data & analyzing your document. Please wait...`
+                }
+              </span>
+              <span>{Math.round(uploadProgress)}%</span>
             </div>
+            <div className="progress" style={{ height: '10px', background: '#e9ecef', position: 'relative', borderRadius: '5px', overflow: 'hidden' }}>
+              <div 
+                className={`progress-bar progress-bar-striped progress-bar-animated ${uploadProgress > 20 ? 'bg-warning' : 'bg-info'}`}
+                role="progressbar" 
+                style={{ 
+                  width: `${uploadProgress}%`,
+                  transition: 'width 0.4s linear',
+                  left:0,
+                  height: '10px',
+                }} 
+                aria-valuenow={uploadProgress} 
+                aria-valuemin={0}
+                aria-valuemax={100}
+              ></div>
+            </div>
+          </div>
+        )}
+        <div className="d-flex justify-content-end gap-2">
+          
+          <button type="button" className="btn btn-info" onClick={handleCreateDeal} disabled={isCreatingDeal}>
+            {isCreatingDeal ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                {uploadProgress === 99 ? 'Analyzing...' : 'Uploading...'}
+              </>
+            ) : (
+              'Create Deal'
+            )}
+          </button>
+        </div>
+      </div>
           </div>
         </div>
       </div>

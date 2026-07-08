@@ -66,16 +66,7 @@ function Header() {
                       Dashboard
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#">
-                      Pipeline
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#">
-                      Settings
-                    </a>
-                  </li>
+                  
                 </ul>
                 <ul className="navbar-nav ms-auto">
                   <li className="nav-item">{renderThemeToggle('checkbox-desktop-app')}</li>

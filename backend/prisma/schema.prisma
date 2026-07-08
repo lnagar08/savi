@@ -85,7 +85,7 @@ model Deal {
   noi                    Int?     @default(0)
   vpv                    Int?    @default(0)
   ltv                    Int?     @default(0)
-
+  comparatorBondSpread   Int?    @default(0)
   createdAt             DateTime              @default(now()) @map("created_at")
   updatedAt             DateTime              @updatedAt @map("updated_at")
   documents             Document[]

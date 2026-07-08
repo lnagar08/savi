@@ -28,16 +28,17 @@ function CreateBidLetterModal({ dealId, dealName, dealLocation, yieldValue, uplo
   const [errorMessage, setErrorMessage] = useState('')
   //const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [bidLetterName, setBidLetterName] = useState("");
+  //const [bidLetterName, setBidLetterName] = useState("");
   const [error, setError] = useState("");
   const [bidLetterContent, setBidLetterContent] = useState('')
+  const [bidLetterDataName, setBidLetterDataName] = useState('');
   const modalRef = useRef(null);
 const location = useLocation();
   useEffect(() => {
     const modalElement = document.getElementById('myModal3');
 
     const handleModalClose = () => {
-      setBidLetterName("");
+      setBidLetterDataName("");
       setBidLetterContent("");
       setErrorMessage("");
       setUploadedFile(null);
@@ -59,14 +60,14 @@ useEffect(() => {
       try {
         const res = await apiClient.get(`/bidLetter/${selectedBidId}`);
         const data = res.data?.data ?? res.data;
-        setBidLetterName(data.projectName || "");
+        setBidLetterDataName(data.projectName || "");
         setBidLetterContent(data.rawContent || "");
       } catch (err) {
         console.error("Error fetching:", err);
       }
     } else {
       
-      setBidLetterName("");
+      setBidLetterDataName("");
       setBidLetterContent("");
     }
   };
@@ -95,7 +96,7 @@ useEffect(() => {
 };
 
 const handleClose = () => {
-  setBidLetterName("");
+  setBidLetterDataName("");
   setBidLetterContent("");
   setErrorMessage("");
   setError("");
@@ -184,7 +185,6 @@ const uploadToCloudinary = async (file: File) => {
 
     setErrorMessage('')
     setUploadedFile(file)
-
     //setIsUploading(true)
     //const formData = new FormData()
     //formData.append('file', file)
@@ -209,7 +209,8 @@ const uploadToCloudinary = async (file: File) => {
         });
       if (res.status === 200 || res.status === 201) {
        
-        setBidLetterContent(res.data.data);
+        setBidLetterContent(res.data.data.content);
+        setBidLetterDataName(res.data.data.projectName || file.name);
         setUploadedFile(null);
       } else {
         setErrorMessage('Something went wrong! try again..');
@@ -226,7 +227,7 @@ const uploadToCloudinary = async (file: File) => {
     }
   }
   const handleCreateBidLetter = async () => {
-    if (bidLetterName.length < 5) {
+    if (bidLetterDataName.length < 5) {
       setError("Please enter name at least 5 characters before saving.");
       return; 
     }
@@ -244,7 +245,7 @@ const uploadToCloudinary = async (file: File) => {
       }
       const payload = {
         dealId: dealId,
-        name: bidLetterName, 
+        name: bidLetterDataName, 
         rowContent: bidLetterContent, 
       };
       let res; 
@@ -273,7 +274,7 @@ const uploadToCloudinary = async (file: File) => {
     }
   }
 const validateName = (value: string) => {
-  setBidLetterName(value);
+  setBidLetterDataName(value);
   
   if (value.trim() === "") {
     setError("Name is required.");
@@ -425,7 +426,7 @@ const validateName = (value: string) => {
                     type='text' 
                     name="bidlettername" 
                     className="form-control" 
-                    value={bidLetterName} 
+                    value={bidLetterDataName} 
                     onChange={(e) => validateName(e.target.value)} 
                     placeholder="Enter bid letter name" 
                     
@@ -460,7 +461,7 @@ const validateName = (value: string) => {
           <div className="modal-footer">
            <button 
             disabled={
-              (bidLetterName?.length || 0) < 5 || 
+              (bidLetterDataName?.length || 0) < 5 || 
               !bidLetterContent?.trim() || 
               isSubmitting
             }

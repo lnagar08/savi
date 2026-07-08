@@ -1,6 +1,6 @@
 // full
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import type { LeaseInputs } from '../types/lease';
+//import type { LeaseInputs } from '../types/lease';
 import type { ReactNode } from 'react'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -20,14 +20,24 @@ import NdaAnalysisModalData from '../components/deal-analysis/NdaAnalysisModalDa
 import AiAssistantModal from '../components/dashboard/AiAssistantModal'
 import apiClient from '../services/api'
 
-import { calculateLease } from '../utils/leaseMath';
+//import { calculateLease } from '../utils/leaseMath';
 import InputDealModal from '../components/deal-analysis/InputDealModal'
 //import fetchMarketCurves from '../utils/marketCurves';
 import { includeCurrency } from '../utils/formatters';
-import { PriceSensitivityChart } from '../utils/ZSpreadSensitivityChart';
-import { AmortisationChart } from '../utils/AmortisationChart';
-import { RentalCashflowChart } from '../utils/RentalCashflowChart';
-import { RentalCashflowProfileChart } from '../utils/RentalCashflowProfileChart';
+//import { SensitivityChart } from '../utils/ZSpreadSensitivityChart';
+import { toPriceSensitivityChartData } from '../utils/sensitivityChartAdapter';
+import { PriceSensitivityChart } from '../utils/PriceSensitivityChart';
+import { toAmortisationChartData } from '../utils/amortisationChartAdapter';
+import { AmortisationChartData } from '../utils/AmortisationChartData';
+import { toRentalCashflowChartData } from '../utils/rentalCashflowChartAdapter';
+import { RentalCashflowChartData } from '../utils/RentalCashflowChartData';
+import { toRentalCashflowProfileChartData } from '../utils/rentalCashflowProfileChartAdapter';
+import { RentalCashflowProfileChartData } from '../utils/RentalCashflowProfileChartData';
+//import { AmortisationChart } from '../utils/AmortisationChart';
+//import { RentalCashflowChart } from '../utils/RentalCashflowChart';
+//import { RentalCashflowProfileChart } from '../utils/RentalCashflowProfileChart';
+import { runModel, computeCustomSensitivity } from '../utils/pricingEngine';
+import type { ModelInputs } from '../utils/pricingEngine';
 
 type DealData = {
   name?: string
@@ -44,6 +54,7 @@ type DealData = {
   noi?: number
   vpv?: number
   ltv?: number
+  comparatorBondSpread?: number
   user:{
     name: string
   },
@@ -420,8 +431,8 @@ function DealAnalysisDetailsPage() {
   const [editingFieldPath, setEditingFieldPath] = useState<string | null>(null)
   const [draftValue, setDraftValue] = useState('')
   const [editedValues, setEditedValues] = useState<Record<string, string>>({})
-  const [inputs, setInputs] = useState<LeaseInputs | null>(null);
-  const [curves, setCurves] = useState();
+  const [inputs, setInputs] = useState<ModelInputs | null>(null);
+  //const [curves, setCurves] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const startEdit = (fieldPath: string, initialValue: string) => {
@@ -469,7 +480,7 @@ function DealAnalysisDetailsPage() {
     loadData();
   }, []);*/
 
-  const dealName = deal?.name || deal?.deal_identification?.deal_name || 'Project Aurora A'
+  const dealName = deal?.deal_identification?.deal_name || 'Project Aurora A'
   const dealLocation = deal?.location || deal?.deal_identification?.location || 'New York, NY'
   const dealStage = deal?.stage || deal?.deal_identification?.stage || 'Due Diligence'
   const dealAmount = deal?.value ?? deal?.deal_identification?.value
@@ -479,80 +490,142 @@ function DealAnalysisDetailsPage() {
   const financialInformation = deal?.financial_information as Record<string, unknown> | undefined
   //const leaseInformation = deal?.lease_information as Record<string, unknown> | undefined
   
-  const niy = financialInformation?.net_initial_yield_percent as any;
+  //const niy = financialInformation?.net_initial_yield_percent as any;
   const startDate = deal?.lease_information?.lease_start_date.split('T')[0];
   const expiryDate = deal?.lease_information?.lease_expiry_date.split('T')[0];
   const pricingDate = deal?.lease_information?.pricing_date? deal?.lease_information?.pricing_date.split('T')[0]: startDate;
   const collar = deal?.lease_information?.collar ? deal?.lease_information?.collar.match(/\d+/)[0] : '0';
   const cap = deal?.lease_information?.cap ? deal?.lease_information?.cap.match(/\d+/)[0] : '0';
   const starting_rent = deal?.deal_identification?.starting_rent ?? dealAmount;
-  const spread = deal?.lease_information?.spread ?? 0.0245; //2.45%
+  const spread = deal?.lease_information?.spread ?? 2.45; //2.45%
   const paymentFrequency = deal?.lease_information?.payment_frequency || 'Quarterly';
   const purchaserCosts = Number((financialInformation?.costs as any)?.purchaser_costs_percent || 0);
-  const loanAmount = parseFloat(deal?.lease_information?.loan_amount) || 0;
+  //const loanAmount = parseFloat(deal?.lease_information?.loan_amount) || 0;
   const marketValue = parseFloat(deal?.lease_information?.market_value) || deal?.financial_information?.asking_price as number || 0;
   //const ltv = marketValue > 0 ? (loanAmount / marketValue) * 100 : 0;
-  //const comparatorBondSpread = 0.012;//1.20% 
-  //console.log(pricingDate);
+  const comparatorBondSpreadValue = deal?.comparatorBondSpread ?? 0;
+  //
     useEffect(() => {
     if (starting_rent && startDate && expiryDate) {
-      setInputs({
-        pricingDate: parseDateToISO(pricingDate),//"2026-03-30",
-        leaseStartDate: parseDateToISO(startDate), //"2026-04-05",
-        leaseExpiryDate: parseDateToISO(expiryDate), //"2075-04-05",
-        initialAnnualRent: Number(starting_rent), //1241760,
-        paymentFrequency: paymentFrequency, //"Quarterly",
-        paymentTiming: "Arrears",
-        reviewFrequency: "Annual",//paymentFrequency,
-        inflationLagMonths: deal?.inflationLagMonths ?? 3, //3 months
-        cap: cap / 100, //4/100,
-        collar: collar / 100, //0.00,
-        targetZSpread: spread / 100, //2.45 / 100,
-        purchaserCosts: purchaserCosts /100, //6.8 / 100,
-        loanAmount: loanAmount ?? 0, //5000000,
-        //comparatorBondSpread: comparatorBondSpread
-        noi: deal?.noi ?? 0,
-        vpv: deal?.vpv ?? 0,
-        ltv: deal?.ltv ?? 0,
-      });
+      const inputsD: ModelInputs = {
+          dealName: dealName,
+          cashflowStartDate: startDate,
+          cashflowExpiryDate: expiryDate,
+          reviewPattern: 'Annual',
+          paymentFrequency: paymentFrequency,
+          indexation: 'CPI',
+          collar: Number(collar)/ 100,
+          cap: Number(cap) / 100,
+          startingRent: Number(starting_rent),
+          pricingDate: pricingDate,
+          stabilisedNOI: deal?.noi ?? 0,
+          vpv: deal?.vpv ?? 0,
+          purchaserCosts: Number(purchaserCosts) / 100,
+          targetZSpread: Number(spread) / 100,
+          comparatorBondSpread: (Number(comparatorBondSpreadValue) / 100) / 100,
+        };
+      setInputs(inputsD);
     }
    
-  }, [starting_rent, startDate, expiryDate, financialInformation, curves, deal, cap, collar, spread, pricingDate]); 
-  const soniaCurve = 0.0384;
-  const inflationCurve = 0.031;
-  const giltCurve = 0.042;
-  const curve = useMemo(() => ({
-    inflationCurve: [{ date: "2027-01-01", rate: inflationCurve }],
-    soniaCurve: [{ date: "2027-01-01", rate: soniaCurve }],
-    giltCurve: [{ duration: 5, yield: giltCurve }],
+  }, [starting_rent, startDate, expiryDate, financialInformation, deal, cap, collar, spread, pricingDate]); 
+
+  //const soniaCurve = 0.0384;
+ // const inflationCurve = 0.031;
+ // const giltCurve = 0.042;
+ // const curve = useMemo(() => ({
+ //   inflationCurve: [{ date: "2027-01-01", rate: inflationCurve }],
+ //   soniaCurve: [{ date: "2027-01-01", rate: soniaCurve }],
+ //   giltCurve: [{ duration: 5, yield: giltCurve }],
     //inflationCurve: [{ date: "2027-01-01", rate: 0.031 }],
     //soniaCurve: [{ date: "2027-01-01", rate: 0.0374 }],
     //giltCurve: [{ duration: 5, yield: 0.042 }],
-  }), [curves]);
+ // }), [curves]);
 
   
   const results = useMemo(() => {
-    if (!inputs) return { 
-      schedule: [], 
-      grossPrice: 0, 
+    if (!inputs) return {
+    outputs:{ 
+      grossPrice: 0,
       netPrice: 0,
       irr: 0,
       duration: 0,
       wal: 0,
-      spreadOverGilts: 0,
-      cashflows: [],
-      sensitivityTable: {}, 
-      amortisationSchedule: [],
-      illiquidityPremiumBps: 0,
-      spread: 0,
-      sensitivityChartData: [],
-      sensitivityMetrics: [],
-      income: 0,
-      loanAmount: 0,
-    };
-    return calculateLease(inputs, curve || {});
-  }, [inputs, curve]); 
+      soniaAtDuration: 0,
+      ukt: 0,
+      niy: 0,
+      illiquidityPremium: 0,
+      ltv: 0,
+      incomeCover: 0,
+      spreadOverGilts: 0
+    },
+    sensitivity:[],
+    amortisation: [],
+    periods: []
+    
+    }
+    return runModel(inputs);
+    //return runModel(inputs || {});
+  }, [inputs]); 
+
+  const grossPrice = Math.ceil(results.outputs.grossPrice ?? 0);
+  const netPrice = Math.ceil(results.outputs.netPrice ?? 0);
+  const irr = ((results.outputs.irr ?? 0) * 100).toFixed(2) + '%';
+  const duration = (results.outputs.duration ?? 0).toFixed(2);
+  const wall = (results.outputs.wal ?? 0).toFixed(2);
+  const soniaAtDuration = ((results.outputs.soniaAtDuration ?? 0) * 100).toFixed(2) + '%';
+  const ukt = ((results.outputs.ukt ?? 0) * 100).toFixed(2) + '%';
+  const niy = ((results.outputs.niy ?? 0) * 100).toFixed(2) + '%';
+  const illiquidityPremium = results.outputs.illiquidityPremium ?? 0;
+  const ltv = ((results.outputs.ltv ?? 0) * 100).toFixed(2) + '%';
+  const incomeCover = ((results.outputs.incomeCover ?? 0) * 100).toFixed(2) + '%';
+  const spreadOverGilts = results.outputs.spreadOverGilts ?? 0;
+  const sensitivityChartData = toPriceSensitivityChartData(results.sensitivity);
+  const amortisationChartData = toAmortisationChartData(results.amortisation);
+  const rentalCashflowChartData = toRentalCashflowChartData(results.amortisation);
+  const rentalCashflowProfileChartData = toRentalCashflowProfileChartData(results.amortisation);
+
+  if (!inputs || !results) return null;
+  const sensitivityMetrixData = computeCustomSensitivity(inputs, results.periods, [230, 240, 250, 260, 270]);
+  const sensitivityMetrix = sensitivityMetrixData.reduce((acc: Record<string, string>, item) => {
+  acc[item.label] = includeCurrency(Math.ceil(item.netPrice ?? 0));
+  return acc;
+}, {});
   
+  /*const sensitivityChartData = results.sensitivity.map((index, item) => ({
+    "name": `${index + 1}`,
+    "Z-Spread": item.zSpread,
+    "Gross Price": item.grossPrice,
+    "Net Price": item.netPrice,
+  }));*/
+
+  //console.log(results);
+/*
+ const inputsD: ModelInputs = {
+  dealName: 'Twinkle',
+  cashflowStartDate: '2026-04-05',
+  cashflowExpiryDate: '2075-04-05',
+  reviewPattern: 'Annual',
+  paymentFrequency: 'Quarterly',
+  indexation: 'CPI',
+  collar: 0,
+  cap: 0.04,
+  startingRent: 1241760,
+  pricingDate: '2026-03-30',
+  stabilisedNOI: 10542815,
+  vpv: 80859000,
+  purchaserCosts: 0.068,
+  targetZSpread: 0.0245,
+  comparatorBondSpread: 0.012,
+};*/
+
+/*const resultD = runModel(inputsD);
+resultD.outputs.grossPrice   // 31,458,470.93
+resultD.outputs.netPrice     // 29,455,497.13
+resultD.periods              // full period-by-period cashflow/discounting schedule
+resultD.sensitivity           // the ±15/10/5bps Z-spread grid
+resultD.amortisation           // the Amortisation-sheet-equivalent table
+console.log(resultD);*/
+//console.log(results.outputs.grossPrice);
   //const firstPayment = 0//results.cashflows && results.cashflows.length > 0 ? results.cashflows[0].payment : 0;
  // const isQuarterly = (deal?.lease_information?.payment_frequency || inputs?.paymentFrequency) === 'Quarterly';
   //const noi = firstPayment * (isQuarterly ? 4 : 12);
@@ -561,13 +634,15 @@ function DealAnalysisDetailsPage() {
   const grossRent = Number(starting_rent || 0);
   //const operatingExpenses = Number(deal?.lease_information?.annualOperatingExpenses || 0);
   const stabilisedNOI = deal?.noi ?? 0;
-  const IRR = ((results.irr ?? 0) * 100).toFixed(1) + '%';
-  const percentageSpread = niy - giltCurve;
-  const bpsValue = Math.round(percentageSpread * 100);
+  //const IRR = 0/*((results.irr ?? 0) * 100).toFixed(1) + '%';*/
+  //const percentageSpread = niy - giltCurve;
+  //const percentageSpread = niy;
+  const bpsValue = Math.round(spreadOverGilts * 100);
   const comparatorBondSpread = `${bpsValue} Bps`;
 
-  const rawPremiumPercent = niy - giltCurve - inflationCurve;
-  const illiquidityPremiumBps = Math.round(rawPremiumPercent * 100);
+  //const rawPremiumPercent = niy - giltCurve - inflationCurve;
+  //const rawPremiumPercent = niy;
+  const illiquidityPremiumBps = Math.round(illiquidityPremium * 100);
   const formattedIlliquidityPremium = `${illiquidityPremiumBps} Bps`;
   
   const dealDetails = { 
@@ -586,33 +661,33 @@ function DealAnalysisDetailsPage() {
 
   const underwritingMatrix = {
     pricing_date: pricingDate,
-    //spread: results.spread,
+    spread: `Z+250`,
     credit_rating: creditRating,
     stabillised_NOI: includeCurrency(stabilisedNOI),
-    VPF: includeCurrency(deal?.vpv || 0),
-    IRR: IRR,
-    duration: `${results.duration || 0}`,
-    WAL: `${results.wal || 0}`,
+    VPV: includeCurrency(deal?.vpv || 0),
+    IRR: irr,
+    duration: duration,
+    WAL: wall,
     assumed_costs: deal?.lease_information?.assumed_costs ? `${deal.lease_information.assumed_costs}%` : `${purchaserCosts.toFixed(2)}%`,
     comparatorBondSpread: comparatorBondSpread,
     illiquidity_premium: formattedIlliquidityPremium,
   };
 
   const dealMetrics = {
-    NIY: typeof niy === 'number' ? `${niy.toFixed(2)}%` : String(niy || "0.00%"),
-    net_price: includeCurrency(results.netPrice),
-    gross_price: includeCurrency(results.grossPrice),
-    LTV: `${deal?.ltv || 0}%`,
-    income_cover: `${results.income}%`,
+    NIY: niy,
+    net_price: includeCurrency(netPrice),
+    gross_price: includeCurrency(grossPrice),
+    LTV: ltv === 'Infinity%' ? '0%' : ltv,
+    income_cover: incomeCover,
   };
 
-  const sensitivityMetrics = results.sensitivityMetrics;
+  //const sensitivityMetrics = results.sensitivity[0]//results.sensitivityMetrics;
 
   const detailCards: Array<{ title: string; data: Record<string, unknown> | undefined }> = [
     { title: 'Deal Details', data: dealDetails as Record<string, unknown> },
     { title: 'Underwriting Metrics', data: underwritingMatrix as Record<string, unknown> },
     { title: 'Deal Metrics', data: dealMetrics as Record<string, unknown> },
-    { title: 'Sensitivity Metrics', data: sensitivityMetrics as unknown as Record<string, unknown> }
+    { title: 'Sensitivity Metrics', data: sensitivityMetrix as unknown as Record<string, unknown> }
   ];
 
 
@@ -636,8 +711,6 @@ function DealAnalysisDetailsPage() {
     'Market Context': 'market_context',
     'Deal Pipeline': 'deal_pipeline',
   }
-
-const sensitivityChart = results.sensitivityChartData;
 
   if (isLoadingDeal) {
     return (
@@ -708,9 +781,9 @@ const sensitivityChart = results.sensitivityChartData;
                   <button type="button" className="btn btn-info lightbtn" data-bs-toggle="modal" data-bs-target="#myModal">
                     NDA Analysis
                   </button>
-                  <button type="button" className="btn btn-info lightbtn" onClick={handleUploadClick}>
+                  {/*<button type="button" className="btn btn-info lightbtn" onClick={handleUploadClick}>
                     Upload New Document
-                  </button>
+                  </button>*/}
                   <button type="button" className="btn btn-info lightbtn" data-bs-toggle="modal" data-bs-target="#myModal3">
                     Create Bid Letter
                   </button>
@@ -738,7 +811,7 @@ const sensitivityChart = results.sensitivityChartData;
               <div className="col-md-3">
                 <div className="analysis-card cardbg2">
                   <span><img src={analysisicon3} className="img-fluid" alt="SONIA UKTI" /></span>
-                  <h2>{`${(soniaCurve * 100).toFixed(2)}% / ${(giltCurve * 100).toFixed(2)}%`}</h2>
+                  <h2>{`${soniaAtDuration} / ${ukt}`}</h2>
                   <h5>SONIA/UKTI</h5>
                 </div>
               </div>
@@ -752,7 +825,7 @@ const sensitivityChart = results.sensitivityChartData;
               <div className="col-md-3">
                 <div className="analysis-card cardbg4">
                   <span><img src={analysisicon4} className="img-fluid" alt="LTV Income Cover" /></span>
-                  <h2>{deal?.ltv || 0}% / {results.income? results.income: '0'}%</h2>
+                  <h2>{ltv === 'Infinity%' ? '0%' : ltv} / {incomeCover}</h2>
                   <h5>LTV / Income Cover</h5>
                 </div>
               </div>
@@ -818,18 +891,18 @@ const sensitivityChart = results.sensitivityChartData;
                   <div className='row'>
                     <div className="col-md-12">
                       <div className='whitebg mb-30 deal-detail-card-wrap'>
-                        <PriceSensitivityChart chartData={sensitivityChart} />
+                        <PriceSensitivityChart chartData={sensitivityChartData} />
                       </div>
                       <div className='whitebg mb-30 deal-detail-card-wrap'>
-                        <AmortisationChart data={results.amortisationSchedule} />
-                      </div>
-
-                      <div className='whitebg mb-30 deal-detail-card-wrap'>
-                        <RentalCashflowChart data={results.amortisationSchedule} />
+                        <AmortisationChartData data={amortisationChartData} />
                       </div>
 
                       <div className='whitebg mb-30 deal-detail-card-wrap'>
-                        <RentalCashflowProfileChart data={results.amortisationSchedule} />
+                        <RentalCashflowChartData data={rentalCashflowChartData} />
+                      </div>
+
+                      <div className='whitebg mb-30 deal-detail-card-wrap'>
+                        <RentalCashflowProfileChartData data={rentalCashflowProfileChartData} />
                       </div>
                       
                     </div>
@@ -863,7 +936,7 @@ const sensitivityChart = results.sensitivityChartData;
                   <div className="tabledesign filterno whitebg">
                     <div className="documents-new">
                       <h5 className="shot-heading">Documents</h5>
-                      <button className="btn btn-info" onClick={handleUploadClick}>Upload New Document</button>
+                      {/*<button className="btn btn-info" onClick={handleUploadClick}>Upload New Document</button>*/}
                     </div>
                     <div className="table-responsive">
                       <table className="table dt-responsive categories_table">
@@ -959,9 +1032,9 @@ const sensitivityChart = results.sensitivityChartData;
       {isModalOpen && (
         <InputDealModal
           inputs={inputs}
-          setInputs={setInputs}
-          setCurves={setCurves}
-          curve={curve}
+          //setInputs={setInputs}
+          //setCurves={setCurves}
+          //curve={curve}
           dealId={dealId}
           onClose={() => setIsModalOpen(false)} 
         />

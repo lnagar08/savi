@@ -484,16 +484,17 @@ export const updateInputs = async (req: Request, res: Response) => {
         pricingDate,
         rent,
         paymentFrequency,
-        inflationLagMonths,
+        //inflationLagMonths,
         cap,
         collar,
         spread,
         purchaserCosts,
         noi,
         vpv,
-        ltv
+        //ltv,
+        comparatorBondSpread
     } = req.body;
-
+console.log(req.body);
     const deal = await prisma.deal.findFirst({
         where: {
             id: dealIdNum,
@@ -529,10 +530,11 @@ export const updateInputs = async (req: Request, res: Response) => {
         prisma.deal.update({
             where: { id: dealIdNum },
             data: {
-                inflationLagMonths: inflationLagMonths,
-                noi: Number(noi),
-                vpv: Number(vpv),
-                ltv: Number(ltv)
+                //inflationLagMonths: inflationLagMonths,
+                noi: noi,
+                vpv: vpv,
+                //ltv: Number(ltv),
+                comparatorBondSpread: comparatorBondSpread * 100
             }
         }),
 

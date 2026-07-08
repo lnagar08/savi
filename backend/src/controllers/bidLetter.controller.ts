@@ -71,7 +71,7 @@ export const createBidLetter = async (req: Request, res: Response) => {
     const deal = await prisma.bidLetter.create({
         data: {
             dealId: Number(req.body.dealId), 
-            rawContent: finalHtmlOutput, 
+            rawContent: finalHtmlOutput.content, 
         }
     });
     res.status(201).json({
@@ -85,7 +85,7 @@ export const createBidLetter = async (req: Request, res: Response) => {
   }
 }
 
-async function generateBidLetterFromData(dealData: any, bidLetterTemplate: string, clientDetails: any): Promise<string> {
+async function generateBidLetterFromData(dealData: any, bidLetterTemplate: string, clientDetails: any): Promise<{ projectName: string; content: string }> {
   
   const base64Regex = /data:image\/[a-zA-Z]+;base64,[^"']+/g;
   const savedImages: string[] = [];
@@ -123,7 +123,14 @@ async function generateBidLetterFromData(dealData: any, bidLetterTemplate: strin
         Technical Rules:
         - Maintain all exact layout structures, tables, fonts, and inline CSS styles.
         - DO NOT change, delete, or modify image placeholders like %DYNAMIC_IMAGE_0%.
-        - Return ONLY the raw updated HTML code. No chat explanations, no markdown blocks.`
+
+        OUTPUT FORMAT RULE:
+        You must return a strict JSON object with exactly two keys:
+        {
+          "projectName": "Extracted title or heading name here",
+          "content": "The full raw populated HTML string here"
+        }
+        `
       },
       {
         role: 'user',
@@ -132,18 +139,21 @@ async function generateBidLetterFromData(dealData: any, bidLetterTemplate: strin
     ]
   });
 
-  let finalBidHtml = (response.choices?.[0]?.message?.content || "").trim();
+  const rawJsonString = response.choices?.[0]?.message?.content || "{}";
+  const parsedData = JSON.parse(rawJsonString);
 
-  if (finalBidHtml.startsWith('```html')) {
-    finalBidHtml = finalBidHtml.replace(/^```html\s*/, '').replace(/\s*```$/, '');
-  }
+  let finalBidHtml = (parsedData.content || "").trim();
+  let extractedProjectName = parsedData.projectName || "Default_Project";
 
   savedImages.forEach((originalBase64, index) => {
     const placeholderToFind = "%DYNAMIC_IMAGE_" + index + "%";
     finalBidHtml = finalBidHtml.replace(placeholderToFind, originalBase64);
   });
 
-  return finalBidHtml;
+  return {
+    projectName: extractedProjectName,
+    content: finalBidHtml
+  };
 }
 
 
