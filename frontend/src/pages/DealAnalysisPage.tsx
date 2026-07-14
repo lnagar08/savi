@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { Fragment, useEffect, useState } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import analysisicon1 from '../assets/images/analysisicon1.png'
 import analysisicon2 from '../assets/images/analysisicon2.png'
 import analysisicon3 from '../assets/images/analysisicon3.png'
@@ -335,11 +335,11 @@ const renderValue = (
 }
 
 function DealAnalysisPage() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
-  const handleUploadClick = () => {
+  /*const handleUploadClick = () => {
     navigate('/dashboard', { state: { openModal: true } });
-  };
+  };*/
 
   const [searchParams] = useSearchParams()
   const dealId = searchParams.get('dealId')
@@ -500,10 +500,6 @@ function DealAnalysisPage() {
               <div className="extraction-review-right">
                 <div className="btn-group">
                  
-                  <button type="button" className="btn btn-info lightbtn" onClick={handleUploadClick}>
-                    Upload New Document
-                  </button>
-                 
                   <button type="button" className="btn btn-info lightbtn">Run Analysis</button>
                   <button type="button" className="btn btn-info">Generate Report</button>
                 </div>
@@ -649,7 +645,7 @@ function DealAnalysisPage() {
                   <div className="tabledesign filterno whitebg">
                     <div className="documents-new">
                       <h5 className="shot-heading">Documents</h5>
-                      <button className="btn btn-info" onClick={handleUploadClick}>Upload New Document</button>
+                      
                     </div>
                     <div className="table-responsive">
                       <table className="table dt-responsive categories_table">

@@ -7,18 +7,6 @@
  *   - "Curves"       -> curvesData.json (raw data) + lookupSonia()/lookupInflation()/matchGilt()
  *   - "Amortisation" -> computeAmortisation()
  *
- * HOW TO USE THIS FILE
- * ---------------------------------------------------------------------------
- * 1. Drop this file into your project as `pricingEngine.ts`.
- * 2. Drop `curvesData.json` (extracted from the workbook's "Curves" sheet)
- *    next to it — it contains the SONIA curve, the inflation curve, and the
- *    gilt table exactly as they appear in the spreadsheet.
- * 3. Call `runModel(inputs)` with a `ModelInputs` object built from whatever
- *    form/state your app uses. Every field in ModelInputs is dynamic — there
- *    is nothing hard-coded about a specific deal.
- *
- *      import { runModel, ModelInputs } from './pricingEngine';
- *
  *      const inputs: ModelInputs = {
  *        dealName: 'Twinkle',
  *        cashflowStartDate: '2026-04-05',
@@ -39,11 +27,6 @@
  *
  *      const result = runModel(inputs);
  *      console.log(result.outputs.grossPrice, result.outputs.netPrice);
- *
- * All monetary/rate outputs match the workbook's computed values to within
- * floating point precision (Excel YEARFRAC basis 3 = Actual/365; XLOOKUP
- * match_mode 1 = exact-or-next-larger; XIRR solved via Newton-Raphson with a
- * bisection fallback, matching Excel's own algorithm to full convergence).
  * ============================================================================
  */
 
