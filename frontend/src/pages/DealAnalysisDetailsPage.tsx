@@ -672,7 +672,7 @@ console.log(resultD);*/
     comparatorBondSpread: comparatorBondSpread,
     illiquidity_premium: formattedIlliquidityPremium,
   };
-console.log(deal?.lease_information?.assumed_costs);
+console.log(deal?.lease_information);
   const dealMetrics = {
     NIY: niy,
     net_price: includeCurrency(netPrice),
