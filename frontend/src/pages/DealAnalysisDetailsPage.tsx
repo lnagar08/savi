@@ -668,11 +668,11 @@ console.log(resultD);*/
     IRR: irr,
     duration: duration,
     WAL: wall,
-    assumed_costs: deal?.lease_information?.assumed_costs ? `${deal.lease_information.assumed_costs}%` : `${purchaserCosts.toFixed(2)}%`,
+    assumed_costs: `${purchaserCosts.toFixed(2)}%`,
     comparatorBondSpread: comparatorBondSpread,
     illiquidity_premium: formattedIlliquidityPremium,
   };
-console.log(deal?.lease_information);
+
   const dealMetrics = {
     NIY: niy,
     net_price: includeCurrency(netPrice),
